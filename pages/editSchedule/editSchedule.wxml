@@ -11,8 +11,9 @@
     <view class="field-label">服务项目及时长</view>
     <view wx:for="{{items}}" wx:key="key" class="item-row">
       <input class="input-inline flex2" placeholder="项目名" value="{{item.name}}" data-idx="{{index}}" bindinput="onInputItemName" />
-      <input class="input-inline flex1" type="number" placeholder="分钟" value="{{item.durationMinutes}}" data-idx="{{index}}" bindinput="onInputItemDuration" />
-      <view class="mini-btn danger" bindtap="removeItem" data-idx="{{index}}">删</view>
+      <input class="input-inline flex1" type="number" placeholder="如：60" value="{{item.durationMinutes}}" data-idx="{{index}}" bindinput="onInputItemDuration" />
+      <text class="unit-label">分钟</text>
+      <view class="mini-btn danger" bindtap="removeItem" data-idx="{{index}}">×</view>
     </view>
     <view class="add-row" bindtap="addItem">+ 添加项目</view>
   </view>
@@ -30,7 +31,7 @@
         <picker mode="time" value="{{slot.endTime}}" data-dow="{{day.dayOfWeek}}" data-sidx="{{sIdx}}" data-field="endTime" bindchange="onTimeChange">
           <view class="time-picker">{{slot.endTime}}</view>
         </picker>
-        <view class="mini-btn danger" bindtap="removeSlot" data-dow="{{day.dayOfWeek}}" data-sidx="{{sIdx}}">删</view>
+        <view class="mini-btn danger" bindtap="removeSlot" data-dow="{{day.dayOfWeek}}" data-sidx="{{sIdx}}">×</view>
       </view>
       <view class="add-slot" bindtap="addSlot" data-dow="{{day.dayOfWeek}}">+ 添加时段</view>
     </view>

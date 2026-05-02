@@ -1,25 +1,35 @@
 /* pages/editSchedule/editSchedule.wxss */
+
 .field-label {
-  font-size: 28rpx;
-  color: #666;
+  font-size: var(--fs-sm);
+  color: var(--color-text-secondary);
   margin-bottom: 12rpx;
+  font-weight: 500;
 }
 
+/* 问题1：用 height + line-height 代替 padding 控制垂直尺寸，避免撑出卡片 */
 .input {
-  border: 1rpx solid #ebebeb;
-  border-radius: 8rpx;
-  padding: 16rpx 20rpx;
-  font-size: 30rpx;
-  background: #fafafa;
+  border: 1rpx solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 0 20rpx;
+  height: 72rpx;
+  line-height: 72rpx;
+  font-size: var(--fs-base);
+  background: var(--color-muted-bg);
+  color: var(--color-text-primary);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .input-inline {
-  border: 1rpx solid #ebebeb;
-  border-radius: 8rpx;
-  padding: 12rpx 16rpx;
-  font-size: 28rpx;
-  background: #fafafa;
-  margin-right: 12rpx;
+  border: 1rpx solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 0 16rpx;
+  height: 64rpx;
+  line-height: 64rpx;
+  font-size: var(--fs-base);
+  background: var(--color-muted-bg);
+  color: var(--color-text-primary);
 }
 
 .flex1 { flex: 1; }
@@ -28,26 +38,27 @@
 .item-row {
   display: flex;
   align-items: center;
-  margin-bottom: 16rpx;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-2);
 }
 
 .add-row {
   text-align: center;
-  color: #07c160;
-  font-size: 28rpx;
-  padding: 16rpx 0;
-  border: 2rpx dashed #07c160;
-  border-radius: 8rpx;
-  margin-top: 8rpx;
+  color: var(--color-primary);
+  font-size: var(--fs-base);
+  padding: 18rpx 0;
+  border: 2rpx dashed var(--color-primary);
+  border-radius: var(--radius-sm);
+  margin-top: var(--sp-1);
 }
 
 .day-header {
-  font-size: 28rpx;
-  color: #333;
+  font-size: var(--fs-base);
+  color: var(--color-text-primary);
   font-weight: 500;
   padding: 16rpx 0 8rpx;
-  border-top: 1rpx solid #ebebeb;
-  margin-top: 8rpx;
+  border-top: 1rpx solid var(--color-border);
+  margin-top: var(--sp-1);
 }
 
 .day-header:first-child {
@@ -55,42 +66,57 @@
   margin-top: 0;
 }
 
+/* 问题2：picker flex:1 撑满剩余空间，删除键紧跟其后不留空隙 */
 .slot-row {
   display: flex;
   align-items: center;
   margin-bottom: 12rpx;
   gap: 12rpx;
 }
+.slot-row picker {
+  flex: 1;
+}
 
 .time-picker {
-  padding: 8rpx 20rpx;
-  border: 1rpx solid #ebebeb;
-  border-radius: 8rpx;
-  background: #fafafa;
-  font-size: 28rpx;
-  min-width: 100rpx;
+  padding: 0 16rpx;
+  height: 64rpx;
+  line-height: 64rpx;
+  border: 1rpx solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-muted-bg);
+  font-size: var(--fs-base);
+  color: var(--color-text-primary);
   text-align: center;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .time-sep {
-  color: #999;
+  color: var(--color-text-secondary);
+  flex-shrink: 0;
 }
 
+/* 问题3：× 图标按钮，去掉 margin-left:auto，尺寸收紧 */
 .mini-btn {
-  padding: 6rpx 20rpx;
-  font-size: 24rpx;
-  border-radius: 8rpx;
-  margin-left: auto;
+  flex-shrink: 0;
+  font-size: 36rpx;
+  padding: 0 4rpx;
+  line-height: 1;
 }
 
 .mini-btn.danger {
-  background: #fff1f0;
-  color: #fa5151;
-  border: 1rpx solid #fa5151;
+  color: var(--color-danger);
+}
+
+.unit-label {
+  font-size: var(--fs-sm);
+  color: var(--color-text-secondary);
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .add-slot {
-  font-size: 26rpx;
-  color: #07c160;
-  padding: 8rpx 0;
+  font-size: var(--fs-sm);
+  color: var(--color-accent);
+  padding: 10rpx 0;
 }

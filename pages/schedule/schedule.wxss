@@ -1,70 +1,75 @@
 /* pages/schedule/schedule.wxss */
 
-/* 顶部子 tab */
+/* ===== 顶部子 Tab ===== */
 .sub-tabs {
   display: flex;
-  background: #fff;
-  border-radius: 14rpx;
+  background: var(--color-card);
+  border-radius: var(--radius-md);
   padding: 8rpx;
-  margin-bottom: 24rpx;
-  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.03);
+  margin-bottom: var(--sp-3);
+  box-shadow: var(--shadow-tab);
 }
 .sub-tab {
   flex: 1;
   text-align: center;
   padding: 18rpx 0;
-  font-size: 28rpx;
-  color: #666;
-  border-radius: 10rpx;
+  font-size: var(--fs-base);
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-tab);
+  transition: background var(--dur-normal);
 }
 .sub-tab.active {
-  background: #07c160;
-  color: #fff;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
   font-weight: 600;
 }
 
-/* 他人列表项 */
-.visited-item { align-items: center; }
+/* ===== 他人列表项 ===== */
+.visited-item  { align-items: center; }
 .visited-right { display: flex; flex-direction: column; align-items: flex-end; }
-.text-green { color: #07c160; font-weight: 500; }
+.text-green    { color: var(--color-accent); font-weight: 500; }
 
-/* 未创建日程表态 */
+/* ===== 未创建日程表 ===== */
 .no-schedule-wrap {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 80rpx 40rpx;
+  padding: 80rpx var(--sp-5);
 }
-.no-schedule-icon { font-size: 80rpx; margin-bottom: 24rpx; }
-.no-schedule-title { font-size: 32rpx; font-weight: 600; color: #222; margin-bottom: 12rpx; }
-.no-schedule-desc { font-size: 26rpx; color: #999; }
+.no-schedule-icon  { font-size: 80rpx; margin-bottom: var(--sp-3); }
+.no-schedule-title { font-size: var(--fs-md); font-weight: 600; color: var(--color-text-primary); margin-bottom: 12rpx; }
+.no-schedule-desc  { font-size: var(--fs-sm); color: var(--color-text-secondary); }
 
-/* 详情态头部 */
-.detail-header { position: relative; padding-top: 50rpx; }
+/* ===== 他人详情头部 ===== */
+.detail-header { position: relative; padding-top: 84rpx; }
 .back-btn {
   position: absolute;
   top: 16rpx;
   left: 20rpx;
-  font-size: 28rpx;
-  color: #07c160;
+  font-size: var(--fs-base);
+  color: var(--color-primary);
   padding: 8rpx 16rpx;
 }
-.detail-title { font-size: 34rpx; font-weight: 600; color: #222; }
+.detail-title { font-size: var(--fs-md); font-weight: 600; color: var(--color-text-primary); }
 
-/* Chip */
-.chip-row { display: flex; flex-wrap: wrap; gap: 16rpx; margin-bottom: 20rpx; }
+/* ===== 服务项 Chip ===== */
+.chip-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-2); margin-bottom: var(--sp-2); }
 .chip {
-  padding: 16rpx 24rpx;
-  background: #fff;
-  border-radius: 12rpx;
-  border: 2rpx solid #e8e8e8;
+  padding: 16rpx var(--sp-3);
+  background: var(--color-card);
+  border-radius: var(--radius-chip);
+  border: 2rpx solid var(--color-border);
   min-width: 180rpx;
+  transition: border-color var(--dur-normal), background var(--dur-normal);
 }
-.chip.active { border-color: #07c160; background: #e6f7ee; }
-.chip-main { font-size: 28rpx; color: #222; font-weight: 500; }
-.chip-sub { font-size: 24rpx; color: #888; margin-top: 4rpx; }
+.chip.active {
+  border-color: var(--color-primary);
+  background: var(--color-primary-light);
+}
+.chip-main { font-size: var(--fs-base); color: var(--color-text-primary); font-weight: 500; }
+.chip-sub  { font-size: var(--fs-sm);   color: var(--color-text-secondary); margin-top: 4rpx; }
 
-/* 月历 */
+/* ===== 月历卡 ===== */
 .calendar-card { padding: 16rpx 10rpx; }
 .calendar-header {
   display: flex;
@@ -77,17 +82,17 @@
   height: 64rpx;
   line-height: 64rpx;
   text-align: center;
-  color: #07c160;
+  color: var(--color-primary);
   font-size: 40rpx;
   font-weight: 600;
 }
-.calendar-title { font-size: 32rpx; font-weight: 600; color: #222; }
+.calendar-title   { font-size: var(--fs-md); font-weight: 600; color: var(--color-text-primary); }
 .calendar-weekrow { display: flex; padding: 0 4rpx 4rpx; }
 .calendar-weekcell {
   flex: 1;
   text-align: center;
-  font-size: 24rpx;
-  color: #999;
+  font-size: var(--fs-sm);
+  color: var(--color-text-secondary);
   padding: 10rpx 0;
 }
 .calendar-grid { display: flex; flex-wrap: wrap; padding: 0 4rpx; }
@@ -102,37 +107,37 @@
   box-sizing: border-box;
 }
 .calendar-day {
-  font-size: 28rpx;
-  color: #222;
+  font-size: var(--fs-base);
+  color: var(--color-text-primary);
   width: 54rpx;
   height: 54rpx;
   line-height: 54rpx;
   text-align: center;
   border-radius: 50%;
 }
-.calendar-cell.other-month .calendar-day { color: #ccc; }
+.calendar-cell.other-month .calendar-day { color: var(--color-text-disabled); }
 
-/* 今日标识：绿色描边圆 */
+/* 今日：暖橙描边圆 */
 .calendar-cell.today .calendar-day {
-  border: 2rpx solid #07c160;
-  color: #07c160;
+  border: 2rpx solid var(--color-primary);
+  color: var(--color-primary);
   font-weight: 600;
 }
-/* 选中：填充绿色 */
+/* 选中：暖橙填充 */
 .calendar-cell.selected .calendar-day {
-  background: #07c160;
-  color: #fff;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
   font-weight: 600;
   border: none;
 }
 /* 今日且选中 */
 .calendar-cell.today.selected .calendar-day {
-  background: #07c160;
-  color: #fff;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
   border: none;
 }
 
-/* 多色点 */
+/* ===== 日历指示点 ===== */
 .dot-row {
   position: absolute;
   bottom: 6rpx;
@@ -146,24 +151,24 @@
   height: 10rpx;
   border-radius: 50%;
 }
-.dot-business { background: #07c160; }
-.dot-booking { background: #ff9500; }
-.dot-available { background: #007aff; }
-.dot-selected { background: rgba(255, 255, 255, 0.85); }
+.dot-business  { background: var(--color-primary); }  /* 暖橙 */
+.dot-booking   { background: var(--color-accent); }   /* 雾绿，与主色形成对比 */
+.dot-available { background: #7B9FD4; }               /* 淡蓝，可约时段 */
+.dot-selected  { background: rgba(255, 255, 255, 0.85); }
 
-/* 图例 */
+/* ===== 图例 ===== */
 .legend-row {
   display: flex;
-  gap: 32rpx;
-  padding: 0 8rpx 16rpx;
+  gap: var(--sp-4);
+  padding: 0 var(--sp-1) var(--sp-2);
   margin-top: -8rpx;
 }
 .legend-item {
   display: flex;
   align-items: center;
-  gap: 8rpx;
-  font-size: 22rpx;
-  color: #888;
+  gap: var(--sp-1);
+  font-size: var(--fs-xs);
+  color: var(--color-text-secondary);
 }
 .legend-dot {
   width: 14rpx;
@@ -171,130 +176,122 @@
   border-radius: 50%;
 }
 
-/* 分享码输入行 */
-.key-input-row { display: flex; align-items: center; gap: 16rpx; padding: 20rpx 24rpx; }
+/* ===== 分享码输入行 ===== */
+.key-input-row { display: flex; align-items: center; gap: var(--sp-2); padding: 20rpx var(--sp-3); }
 .key-input {
   flex: 1;
-  font-size: 28rpx;
-  color: #222;
-  background: #f5f5f5;
-  border-radius: 10rpx;
+  font-size: var(--fs-base);
+  color: var(--color-text-primary);
+  background: var(--color-muted-bg);
+  border-radius: var(--radius-sm);
   padding: 16rpx 20rpx;
-  height: 64rpx;
+  height: 72rpx;
   box-sizing: border-box;
 }
 .key-search-btn {
   flex-shrink: 0;
-  background: #07c160;
-  color: #fff;
-  font-size: 28rpx;
-  padding: 16rpx 28rpx;
-  border-radius: 10rpx;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  font-size: var(--fs-base);
+  padding: 16rpx var(--sp-4);
+  border-radius: var(--radius-sm);
   font-weight: 500;
 }
 
-/* 营业时段 - 查看态 */
+/* ===== 营业时段 — 查看态 ===== */
 .slot-display-row {
   display: flex;
   align-items: center;
-  gap: 16rpx;
-  padding: 10rpx 0;
+  gap: var(--sp-2);
+  padding: 12rpx 0;
 }
 .slot-time-tag {
-  font-size: 28rpx;
-  color: #222;
+  font-size: var(--fs-base);
+  color: var(--color-text-primary);
   font-weight: 500;
 }
 .override-badge {
-  font-size: 20rpx;
-  color: #07c160;
-  background: #e6f7ee;
-  padding: 2rpx 10rpx;
-  border-radius: 20rpx;
+  font-size: var(--fs-xs);
+  color: var(--color-accent);
+  background: var(--color-accent-light);
+  padding: 4rpx 14rpx;
+  border-radius: var(--radius-pill);
 }
 .slot-link-row {
   display: flex;
   align-items: center;
-  gap: 8rpx;
-  margin-top: 16rpx;
-  padding-top: 16rpx;
-  border-top: 1rpx solid #f0f0f0;
+  gap: var(--sp-1);
+  margin-top: var(--sp-2);
+  padding-top: var(--sp-2);
+  border-top: 1rpx solid var(--color-border);
 }
 
-/* 营业时段 - 编辑态 */
+/* ===== 营业时段 — 编辑态 ===== */
 .slot-edit-row {
   display: flex;
   align-items: center;
   gap: 12rpx;
-  padding: 12rpx 0;
-  border-bottom: 1rpx solid #f5f5f5;
+  padding: 14rpx 0;
+  border-bottom: 1rpx solid var(--color-muted-bg);
 }
 .time-picker-box {
-  background: #f5f5f5;
-  border-radius: 8rpx;
+  background: var(--color-muted-bg);
+  border-radius: var(--radius-sm);
   padding: 12rpx 20rpx;
-  font-size: 28rpx;
-  color: #222;
-  min-width: 110rpx;
+  font-size: var(--fs-base);
+  color: var(--color-text-primary);
+  min-width: 120rpx;
   text-align: center;
 }
-.time-sep { font-size: 26rpx; color: #999; flex-shrink: 0; }
+.time-sep       { font-size: var(--fs-sm); color: var(--color-text-secondary); flex-shrink: 0; }
 .mini-btn-danger {
-  color: #e74c3c;
-  font-size: 24rpx;
-  padding: 8rpx 16rpx;
-  border: 1rpx solid #e74c3c;
-  border-radius: 8rpx;
+  color: var(--color-danger);
+  font-size: 36rpx;
+  padding: 0 4rpx;
+  line-height: 1;
   flex-shrink: 0;
 }
 .add-slot-row {
-  color: #07c160;
-  font-size: 26rpx;
+  color: var(--color-accent);
+  font-size: var(--fs-sm);
   padding: 16rpx 0 8rpx;
 }
 .edit-action-row {
   display: flex;
-  gap: 16rpx;
-  margin-top: 20rpx;
+  gap: var(--sp-2);
+  margin-top: var(--sp-3);
   justify-content: flex-end;
 }
 .btn-outline-sm {
-  font-size: 26rpx;
-  padding: 14rpx 30rpx;
-  border-radius: 10rpx;
-  border: 2rpx solid #ccc;
-  color: #666;
+  font-size: var(--fs-sm);
+  padding: 14rpx var(--sp-4);
+  border-radius: var(--radius-sm);
+  border: 2rpx solid var(--color-border);
+  color: var(--color-text-secondary);
 }
 .btn-green-sm {
-  font-size: 26rpx;
-  padding: 14rpx 30rpx;
-  border-radius: 10rpx;
-  background: #07c160;
-  color: #fff;
+  font-size: var(--fs-sm);
+  padding: 14rpx var(--sp-4);
+  border-radius: var(--radius-sm);
+  background: var(--color-primary);
+  color: var(--color-on-primary);
   font-weight: 500;
 }
 
-/* 取消预约按钮 */
+/* ===== 取消预约按钮 ===== */
 .cancel-btn {
-  font-size: 24rpx;
-  color: #e74c3c;
-  border: 1rpx solid #e74c3c;
-  border-radius: 20rpx;
-  padding: 4rpx 16rpx;
+  font-size: var(--fs-sm);
+  color: var(--color-danger);
 }
 
-/* 时段 */
-.time-grid { display: flex; flex-wrap: wrap; gap: 16rpx; }
+/* ===== 可约时段网格 ===== */
+.time-grid { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
 .time-chip {
-  background: #fff;
-  border: 2rpx solid #07c160;
-  color: #07c160;
-  padding: 16rpx 24rpx;
-  border-radius: 12rpx;
-  font-size: 28rpx;
+  background: var(--color-primary-light);
+  border: 2rpx solid var(--color-primary);
+  color: var(--color-primary);
+  padding: 16rpx var(--sp-3);
+  border-radius: var(--radius-chip);
+  font-size: var(--fs-base);
   font-weight: 500;
 }
-
-/* 状态标签 */
-.status-tag { font-size: 24rpx; padding: 4rpx 14rpx; border-radius: 20rpx; }
-.status-confirmed { background: #e6f7ee; color: #07c160; }

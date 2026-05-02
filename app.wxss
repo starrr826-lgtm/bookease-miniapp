@@ -1,68 +1,179 @@
-/* app.wxss — 全局通用样式 */
+/* app.wxss — 全局 token + 公共类 */
+
+/* ===== Design Tokens ===== */
 page {
-  background: #f4f5f7;
+  /* 主色 */
+  --color-primary:        #E07B3C;
+  --color-primary-light:  #FDF0E6;
+  --color-primary-dark:   #B85E24;
+  --color-on-primary:     #FFFFFF;
+
+  /* 辅色 */
+  --color-accent:         #5B8E6D;
+  --color-accent-light:   #EAF3EE;
+
+  /* 中性色 */
+  --color-bg:             #FDF7EE;
+  --color-card:           #FFFFFF;
+  --color-border:         #E8D9C4;
+  --color-muted-bg:       #F5EBD9;
+  --color-text-primary:   #2B1D0F;
+  --color-text-secondary: #8A7256;
+  --color-text-disabled:  #C4B49F;
+
+  /* 状态色 */
+  --color-pending-bg:     #FFF4E5;
+  --color-pending-text:   #C2620A;
+  --color-confirmed-bg:   #EFF7ED;
+  --color-confirmed-text: #3E7A52;
+  --color-cancelled-bg:   #F2F1EF;
+  --color-cancelled-text: #8A8178;
+
+  /* 危险色 */
+  --color-danger:         #D94040;
+  --color-danger-light:   #FDEAEA;
+
+  /* 字号 */
+  --fs-xs:   20rpx;
+  --fs-sm:   24rpx;
+  --fs-base: 28rpx;
+  --fs-md:   32rpx;
+  --fs-lg:   36rpx;
+
+  /* 间距 */
+  --sp-1:    8rpx;
+  --sp-2:    16rpx;
+  --sp-3:    24rpx;
+  --sp-4:    32rpx;
+  --sp-5:    40rpx;
+  --sp-6:    48rpx;
+  --sp-page: 24rpx;
+
+  /* 圆角 */
+  --radius-sm:   10rpx;
+  --radius-md:   16rpx;
+  --radius-tab:  12rpx;
+  --radius-chip: 14rpx;
+  --radius-pill: 999rpx;
+  --radius-btn:  14rpx;
+
+  /* 阴影 */
+  --shadow-card: 0 2rpx 12rpx rgba(43, 29, 15, 0.07);
+  --shadow-tab:  0 2rpx 8rpx  rgba(43, 29, 15, 0.05);
+  --shadow-btn:  0 4rpx 16rpx rgba(224, 123, 60, 0.28);
+
+  /* 动效 */
+  --dur-fast:   120ms;
+  --dur-normal: 200ms;
+  --dur-slow:   300ms;
+
+  /* ===== Base ===== */
+  background: var(--color-bg);
   font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'PingFang SC', sans-serif;
-  font-size: 28rpx;
-  color: #222;
+  font-size: var(--fs-base);
+  color: var(--color-text-primary);
 }
 
+/* ===== Layout ===== */
 .container {
-  padding: 24rpx;
+  padding: var(--sp-page);
   box-sizing: border-box;
   min-height: 100vh;
 }
 
+/* ===== Card ===== */
 .card {
-  background: #fff;
-  border-radius: 16rpx;
-  padding: 24rpx;
-  margin-bottom: 20rpx;
-  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.03);
+  background: var(--color-card);
+  border-radius: var(--radius-md);
+  padding: var(--sp-3);
+  margin-bottom: var(--sp-2);
+  box-shadow: var(--shadow-card);
 }
 
+/* ===== Section Title ===== */
 .section-title {
-  font-size: 28rpx;
-  color: #666;
-  margin: 16rpx 8rpx;
+  font-size: var(--fs-sm);
+  color: var(--color-text-secondary);
+  margin: var(--sp-2) var(--sp-1);
   font-weight: 500;
 }
 
-.text-small { font-size: 24rpx; }
-.text-muted { color: #999; }
-.text-bold { font-weight: 600; }
+/* ===== Typography Utilities ===== */
+.text-small { font-size: var(--fs-sm); }
+.text-muted { color: var(--color-text-secondary); }
+.text-bold  { font-weight: 600; }
 
+/* ===== Flex Utilities ===== */
 .row-between {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.link { color: #07c160; }
+/* ===== Link ===== */
+.link { color: var(--color-accent); }
 
+/* ===== Buttons ===== */
 .btn {
-  border-radius: 12rpx;
-  font-size: 30rpx;
-  height: 80rpx;
-  line-height: 80rpx;
+  border-radius: var(--radius-btn);
+  font-size: var(--fs-base);
+  height: 88rpx;
+  line-height: 88rpx;
   text-align: center;
+  font-weight: 600;
 }
-.btn-primary { background: #07c160; color: #fff; }
-.btn-primary[disabled] { background: #a6d9ba; color: #fff; }
-.btn-ghost { background: #fff; color: #07c160; border: 1rpx solid #07c160; }
-
-.empty {
-  padding: 120rpx 24rpx;
+/* btn-primary 自包含全部 shape，单独用 class="btn-primary" 也能正确渲染 */
+.btn-primary {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: var(--radius-btn);
+  font-size: var(--fs-base);
+  height: 88rpx;
+  line-height: 88rpx;
   text-align: center;
-  color: #999;
-  font-size: 28rpx;
+  font-weight: 600;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  box-shadow: var(--shadow-btn);
+}
+.btn-primary[disabled] {
+  background: #F0C9A8;
+  color: var(--color-on-primary);
+  box-shadow: none;
+}
+.btn-ghost {
+  background: var(--color-card);
+  color: var(--color-primary);
+  border: 2rpx solid var(--color-primary);
+}
+
+/* ===== Status Tags (全局，各页面不再重复定义) ===== */
+.status-tag {
+  font-size: var(--fs-sm);
+  padding: 6rpx 18rpx;
+  border-radius: var(--radius-pill);
+  font-weight: 500;
+}
+.status-pending   { background: var(--color-pending-bg);   color: var(--color-pending-text); }
+.status-confirmed { background: var(--color-confirmed-bg); color: var(--color-confirmed-text); }
+.status-cancelled { background: var(--color-cancelled-bg); color: var(--color-cancelled-text); }
+
+/* ===== Empty States ===== */
+.empty {
+  padding: 120rpx var(--sp-page);
+  text-align: center;
+  color: var(--color-text-secondary);
+  font-size: var(--fs-base);
 }
 .empty-inline {
-  padding: 40rpx 24rpx;
+  padding: var(--sp-5) var(--sp-page);
   text-align: center;
 }
 
+/* ===== Divider ===== */
 .divider {
   height: 1rpx;
-  background: #f0f0f0;
-  margin: 16rpx 0;
+  background: var(--color-border);
+  margin: var(--sp-2) 0;
 }

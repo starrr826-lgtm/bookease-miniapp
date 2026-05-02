@@ -1,89 +1,91 @@
 /* pages/my/my.wxss */
 
-/* 用户卡片 */
+/* ===== 用户卡片 ===== */
 .user-card {
   display: flex;
   align-items: center;
-  padding: 30rpx 24rpx;
+  padding: var(--sp-4) var(--sp-3);
+  background: linear-gradient(135deg, #FDF0E6 0%, #FFFFFF 60%);
 }
 .avatar-img,
 .avatar-placeholder {
-  width: 112rpx;
-  height: 112rpx;
+  width: 120rpx;
+  height: 120rpx;
   border-radius: 50%;
-  margin-right: 24rpx;
+  margin-right: var(--sp-3);
   flex-shrink: 0;
 }
 .avatar-placeholder {
-  background: #d0d0d0;
-  color: #fff;
-  font-size: 48rpx;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  font-size: 52rpx;
   font-weight: 600;
   text-align: center;
-  line-height: 112rpx;
+  line-height: 120rpx;
 }
 .user-info { flex: 1; min-width: 0; }
 .nickname {
-  font-size: 34rpx;
+  font-size: var(--fs-md);
   font-weight: 600;
-  color: #222;
+  color: var(--color-text-primary);
   margin-bottom: 8rpx;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-/* 标题行 */
+/* ===== 标题行 ===== */
 .section-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 8rpx 8rpx 16rpx;
+  margin: var(--sp-1) var(--sp-1) var(--sp-2);
 }
 .section-label {
-  font-size: 28rpx;
+  font-size: var(--fs-base);
   font-weight: 500;
-  color: #666;
+  color: var(--color-text-secondary);
 }
 .create-btn {
-  background: #07c160;
-  color: #fff;
-  font-size: 26rpx;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  font-size: var(--fs-sm);
   font-weight: 500;
-  padding: 10rpx 28rpx;
-  border-radius: 32rpx;
+  padding: 10rpx var(--sp-4);
+  border-radius: var(--radius-pill);
   line-height: 1;
+  box-shadow: var(--shadow-btn);
 }
 
-/* 日程表卡片 */
-.schedule-card { padding-bottom: 20rpx; }
-.schedule-body { padding-bottom: 4rpx; }
+/* ===== 日程表卡片 ===== */
+.schedule-card   { padding-bottom: var(--sp-2); }
+.schedule-body   { padding-bottom: 4rpx; }
 .schedule-name {
-  font-size: 32rpx;
+  font-size: var(--fs-md);
   font-weight: 600;
-  color: #222;
+  color: var(--color-text-primary);
   margin-bottom: 8rpx;
 }
 .schedule-meta {
-  font-size: 24rpx;
-  color: #999;
+  font-size: var(--fs-sm);
+  color: var(--color-text-secondary);
 }
 .key-text {
-  color: #555;
+  color: var(--color-primary);
   font-weight: 500;
 }
 
-/* 操作行 */
-.action-copy { color: #07c160; }
+/* ===== 操作行 ===== */
+.action-copy  { color: var(--color-accent); }
 .action-group {
   display: flex;
   align-items: center;
-  gap: 20rpx;
+  gap: var(--sp-3);
 }
-.action-edit { color: #07c160; }
+.action-edit  { color: var(--color-primary); }
 .action-divider {
   width: 1rpx;
   height: 24rpx;
-  background: #e0e0e0;
+  background: var(--color-border);
 }
-.action-delete { color: #e53935; }
+.action-delete { color: var(--color-danger); }

@@ -1,69 +1,77 @@
 /* pages/book/book.wxss */
 
+/* ===== 预约摘要卡 ===== */
 .summary-card {
-  border-left: 6rpx solid #07c160;
+  border-left: 6rpx solid var(--color-primary);
+  background: linear-gradient(135deg, #FDF0E6 0%, #FFFFFF 55%);
 }
 .summary-title {
-  font-size: 34rpx;
+  font-size: var(--fs-md);
   font-weight: 600;
-  color: #222;
-  margin-bottom: 16rpx;
+  color: var(--color-text-primary);
+  margin-bottom: var(--sp-2);
 }
 .summary-line {
   display: flex;
-  font-size: 28rpx;
-  line-height: 1.8;
+  font-size: var(--fs-base);
+  line-height: 1.9;
 }
 .summary-line .label {
-  color: #888;
+  color: var(--color-text-secondary);
   width: 120rpx;
   flex-shrink: 0;
 }
 .summary-line .value {
-  color: #333;
+  color: var(--color-text-primary);
   flex: 1;
+  font-weight: 500;
 }
 
+/* ===== 表单卡 ===== */
 .form-card {
-  padding: 8rpx 24rpx;
+  padding: 8rpx var(--sp-3);
 }
 .field {
-  padding: 20rpx 0;
-  border-bottom: 1rpx solid #f0f0f0;
+  padding: var(--sp-3) 0;
+  border-bottom: 1rpx solid var(--color-border);
 }
 .field:last-child {
   border-bottom: none;
 }
 .field-label {
   display: block;
-  font-size: 26rpx;
-  color: #888;
+  font-size: var(--fs-sm);
+  color: var(--color-text-secondary);
   margin-bottom: 10rpx;
+  font-weight: 500;
 }
 .field-input {
   width: 100%;
-  font-size: 30rpx;
-  color: #222;
+  font-size: var(--fs-md);
+  color: var(--color-text-primary);
   padding: 8rpx 0;
   box-sizing: border-box;
 }
 .field-textarea {
   width: 100%;
-  font-size: 30rpx;
-  color: #222;
+  font-size: var(--fs-md);
+  color: var(--color-text-primary);
   padding: 8rpx 0;
-  min-height: 80rpx;
+  min-height: 88rpx;
   box-sizing: border-box;
 }
 
+/* ===== 提交按钮 ===== */
 .submit-btn {
-  margin: 32rpx 0 16rpx;
+  margin: var(--sp-4) 0 var(--sp-2);
 }
 
+/* ===== 提示文字 ===== */
 .tips {
   text-align: center;
-  font-size: 24rpx;
-  color: #999;
-  margin-top: 16rpx;
-  line-height: 1.6;
+  font-size: var(--fs-sm);
+  color: var(--color-text-secondary);
+  margin-top: var(--sp-2);
+  line-height: 1.7;
+  padding: 0 var(--sp-5);
 }
