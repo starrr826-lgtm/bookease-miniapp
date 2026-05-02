@@ -1,0 +1,211 @@
+<!-- pages/schedule/schedule.wxml -->
+<view class="container">
+
+  <!-- 顶部子 tab -->
+  <view class="sub-tabs">
+    <view class="sub-tab {{subTab === 'mine' ? 'active' : ''}}" data-t="mine" bindtap="switchSubTab">我的日程表</view>
+    <view class="sub-tab {{subTab === 'others' ? 'active' : ''}}" data-t="others" bindtap="switchSubTab">他人的日程表</view>
+  </view>
+
+  <!-- ========= 他人的日程表 - 列表态 ========= -->
+  <block wx:if="{{subTab === 'others' && othersState === 'list'}}">
+    <view class="card key-input-row">
+      <input
+        class="key-input"
+        placeholder="输入分享码查找日程表"
+        value="{{inputKey}}"
+        bindinput="onInputKey"
+        confirm-type="search"
+        bindconfirm="goByKey"
+      />
+      <view class="key-search-btn" bindtap="goByKey">查找</view>
+    </view>
+    <block wx:if="{{!loading}}">
+      <block wx:if="{{visitedList.length > 0}}">
+        <view
+          wx:for="{{visitedList}}"
+          wx:key="_id"
+          class="card row-between visited-item"
+          data-key="{{item.qrCodeKey}}"
+          bindtap="tapVisited"
+        >
+          <view>
+            <view class="text-bold" style="font-size: 30rpx;">{{item.name}}</view>
+            <view class="text-small text-muted" style="margin-top: 6rpx;">
+              分享码 {{item.qrCodeKey}} · {{item.status === 0 ? '已停用' : '已启用'}}
+            </view>
+          </view>
+          <view class="visited-right">
+            <view class="text-small text-green">进入 ›</view>
+            <view class="text-small link text-muted" style="margin-top: 12rpx;" catchtap="unvisit" data-id="{{item._id}}">移除</view>
+          </view>
+        </view>
+      </block>
+      <view wx:else class="empty">
+        <view>这里会显示你访问过的别人的日程表</view>
+        <view class="text-small text-muted" style="margin-top: 12rpx;">扫描对方的二维码或打开分享链接即可添加</view>
+      </view>
+    </block>
+  </block>
+
+  <!-- ========= 我的日程表 - 未创建态 ========= -->
+  <block wx:if="{{subTab === 'mine' && ownerHasSchedule === false}}">
+    <view class="no-schedule-wrap">
+      <view class="no-schedule-icon">📅</view>
+      <view class="no-schedule-title">还没有创建营业时间表</view>
+      <view class="no-schedule-desc">创建后可让他人预约你的时间</view>
+      <view class="btn-primary" style="margin-top: 40rpx;" bindtap="goCreateSchedule">创建我的营业时间</view>
+    </view>
+  </block>
+
+  <!-- ========= 日历区（我的日程表 已创建 / 他人详情态）========= -->
+  <block wx:if="{{(subTab === 'mine' && ownerHasSchedule !== false) || (subTab === 'others' && othersState === 'detail')}}">
+
+    <!-- 他人详情态头部 -->
+    <block wx:if="{{subTab === 'others' && othersState === 'detail' && detailSchedule}}">
+      <view class="card detail-header">
+        <view class="back-btn" bindtap="backToVisitedList">‹ 返回</view>
+        <view class="detail-title">{{detailSchedule.name}}</view>
+        <view class="text-small text-muted" wx:if="{{detailSchedule.description}}">{{detailSchedule.description}}</view>
+      </view>
+      <view class="section-title">选择服务项</view>
+      <block wx:if="{{detailItems.length > 0}}">
+        <view class="chip-row">
+          <view
+            wx:for="{{detailItems}}"
+            wx:key="_id"
+            class="chip {{selectedItemId === item._id ? 'active' : ''}}"
+            data-id="{{item._id}}"
+            bindtap="selectItem"
+          >
+            <view class="chip-main">{{item.name}}</view>
+            <view class="chip-sub">{{item.durationMinutes}}分钟</view>
+          </view>
+        </view>
+      </block>
+      <view wx:else class="empty-inline text-small text-muted">暂无可选服务项</view>
+    </block>
+
+    <!-- 月历卡 -->
+    <view class="card calendar-card">
+      <view class="calendar-header">
+        <view class="calendar-nav" bindtap="prevMonth">‹</view>
+        <view class="calendar-title">{{monthLabel}}</view>
+        <view class="calendar-nav" bindtap="nextMonth">›</view>
+      </view>
+      <view class="calendar-weekrow">
+        <view wx:for="{{weekLabels}}" wx:key="*this" class="calendar-weekcell">{{item}}</view>
+      </view>
+      <view class="calendar-grid">
+        <view
+          wx:for="{{monthGrid}}"
+          wx:key="date"
+          class="calendar-cell {{item.isCurrentMonth ? '' : 'other-month'}} {{item.isSelected ? 'selected' : ''}} {{item.isToday ? 'today' : ''}}"
+          data-date="{{item.date}}"
+          bindtap="selectDate"
+        >
+          <view class="calendar-day">{{item.day}}</view>
+          <view class="dot-row">
+            <view wx:if="{{item.hasBusiness}}" class="cal-dot dot-business {{item.isSelected ? 'dot-selected' : ''}}"></view>
+            <view wx:if="{{item.hasBooking}}" class="cal-dot dot-booking {{item.isSelected ? 'dot-selected' : ''}}"></view>
+            <view wx:if="{{item.hasAvailable}}" class="cal-dot dot-available {{item.isSelected ? 'dot-selected' : ''}}"></view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 图例（仅我的日程表） -->
+    <view wx:if="{{subTab === 'mine'}}" class="legend-row">
+      <view class="legend-item"><view class="legend-dot dot-business"></view><text>营业时段</text></view>
+      <view class="legend-item"><view class="legend-dot dot-booking"></view><text>已有预约</text></view>
+    </view>
+
+    <!-- ====== 我的日程表 下半屏 ====== -->
+    <block wx:if="{{subTab === 'mine'}}">
+
+      <!-- 当日营业时段 -->
+      <view class="section-title">{{selectedDate}} · 当日营业时段</view>
+
+      <!-- 编辑态 -->
+      <block wx:if="{{editingDaySlots !== null}}">
+        <view class="card">
+          <view wx:for="{{editingDaySlots}}" wx:key="key" wx:for-item="slot" wx:for-index="sIdx" class="slot-edit-row">
+            <picker mode="time" value="{{slot.startTime}}" data-idx="{{sIdx}}" data-field="startTime" bindchange="onEditSlotTimeChange">
+              <view class="time-picker-box">{{slot.startTime}}</view>
+            </picker>
+            <text class="time-sep">—</text>
+            <picker mode="time" value="{{slot.endTime}}" data-idx="{{sIdx}}" data-field="endTime" bindchange="onEditSlotTimeChange">
+              <view class="time-picker-box">{{slot.endTime}}</view>
+            </picker>
+            <view class="mini-btn-danger" bindtap="removeEditSlot" data-idx="{{sIdx}}">删</view>
+          </view>
+          <view class="add-slot-row" bindtap="addEditSlot">+ 添加时段</view>
+          <view class="edit-action-row">
+            <view class="btn-outline-sm" bindtap="cancelEditDaySlots">取消</view>
+            <view class="btn-green-sm" bindtap="saveDaySlots">保存</view>
+          </view>
+        </view>
+      </block>
+
+      <!-- 查看态 -->
+      <block wx:else>
+        <view class="card">
+          <block wx:if="{{daySlots.length > 0}}">
+            <view wx:for="{{daySlots}}" wx:key="*this" class="slot-display-row">
+              <view class="slot-time-tag">{{item.startTime}} — {{item.endTime}}</view>
+              <view wx:if="{{dayHasOverride}}" class="override-badge">已自定义</view>
+            </view>
+            <view class="slot-link-row">
+              <view class="link text-small" bindtap="startEditDaySlots">自定义该日时段</view>
+              <view wx:if="{{dayHasOverride}}" class="link text-small text-muted" bindtap="resetDaySlots">· 恢复默认</view>
+            </view>
+          </block>
+          <block wx:else>
+            <view class="text-small text-muted">该日无营业时段</view>
+            <view class="link text-small" style="margin-top: 12rpx;" bindtap="startEditDaySlots">+ 为该日添加时段</view>
+          </block>
+        </view>
+      </block>
+
+      <!-- 当日已确认预约 -->
+      <view class="section-title">当日已确认预约</view>
+      <block wx:if="{{ownerSelectedList.length > 0}}">
+        <view wx:for="{{ownerSelectedList}}" wx:key="_id" class="card">
+          <view class="row-between">
+            <view class="text-bold">{{item.startTime}}-{{item.endTime}}</view>
+            <view style="display:flex;align-items:center;gap:16rpx;">
+              <view class="status-tag status-confirmed">已确认</view>
+              <view class="cancel-btn" bindtap="cancelBooking" data-id="{{item._id}}">取消</view>
+            </view>
+          </view>
+          <view style="margin-top: 12rpx;">{{item.itemName}} · {{item.itemDurationMinutes}}分钟</view>
+          <view class="text-small text-muted" style="margin-top: 6rpx;">{{item.scheduleName}}</view>
+          <view class="divider"></view>
+          <view class="text-small">Guest：{{item.guestName || '（未填）'}} · {{item.guestPhone || ''}}</view>
+          <view wx:if="{{item.note}}" class="text-small text-muted" style="margin-top: 6rpx;">备注：{{item.note}}</view>
+        </view>
+      </block>
+      <view wx:else class="empty-inline text-small text-muted">当日没有已确认的预约</view>
+    </block>
+
+    <!-- ====== 他人详情态 下半屏 ====== -->
+    <block wx:if="{{subTab === 'others' && othersState === 'detail'}}">
+      <view class="section-title">{{selectedDate}} · 可约时段</view>
+      <block wx:if="{{detailSlotsForDate.length > 0}}">
+        <view class="time-grid">
+          <view
+            wx:for="{{detailSlotsForDate}}"
+            wx:key="label"
+            class="time-chip"
+            data-start="{{item.startTime}}"
+            data-end="{{item.endTime}}"
+            bindtap="pickTime"
+          >{{item.label}}</view>
+        </view>
+      </block>
+      <view wx:else class="empty-inline text-small text-muted">当天没有可预约的时段</view>
+    </block>
+
+  </block>
+
+</view>

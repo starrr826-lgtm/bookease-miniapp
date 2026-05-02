@@ -1,0 +1,70 @@
+<!-- pages/book/book.wxml -->
+<view class="container">
+  <!-- 预约摘要 -->
+  <view class="card summary-card">
+    <view class="summary-title">{{scheduleName}}</view>
+    <view class="summary-line">
+      <text class="label">服务项</text>
+      <text class="value">{{itemName}} · {{itemDurationMinutes}}分钟</text>
+    </view>
+    <view class="summary-line">
+      <text class="label">时间</text>
+      <text class="value">{{bookingDate}} {{startTime}}-{{endTime}}</text>
+    </view>
+  </view>
+
+  <!-- 表单 -->
+  <view class="card form-card">
+    <view class="field">
+      <text class="field-label">称呼</text>
+      <input
+        class="field-input"
+        data-f="guestName"
+        value="{{guestName}}"
+        bindinput="onInput"
+        placeholder="方便 Owner 识别你的名字"
+        maxlength="20"
+      />
+    </view>
+
+    <view class="field">
+      <text class="field-label">手机号</text>
+      <input
+        class="field-input"
+        data-f="guestPhone"
+        value="{{guestPhone}}"
+        bindinput="onInput"
+        placeholder="11 位手机号"
+        type="number"
+        maxlength="11"
+      />
+    </view>
+
+    <view class="field">
+      <text class="field-label">备注</text>
+      <textarea
+        class="field-textarea"
+        data-f="note"
+        value="{{note}}"
+        bindinput="onInput"
+        placeholder="有什么特别要告诉 Owner 的？（选填）"
+        maxlength="200"
+        auto-height
+      />
+    </view>
+  </view>
+
+  <!-- 提交按钮 -->
+  <button
+    class="btn btn-primary submit-btn"
+    bindtap="submit"
+    disabled="{{submitting}}"
+    loading="{{submitting}}"
+  >
+    {{submitting ? '提交中...' : '提交预约'}}
+  </button>
+
+  <view class="tips">
+    提交后 Owner 审核前，你可以在"预约 → 我发出的"里取消
+  </view>
+</view>

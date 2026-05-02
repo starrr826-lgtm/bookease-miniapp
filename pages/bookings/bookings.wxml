@@ -1,0 +1,70 @@
+<!-- pages/bookings/bookings.wxml -->
+<view class="container">
+  <!-- 子 tab -->
+  <view class="sub-tabs">
+    <view
+      class="sub-tab {{subTab === 'received' ? 'active' : ''}}"
+      data-t="received"
+      bindtap="switchSubTab"
+    >我收到的</view>
+    <view
+      class="sub-tab {{subTab === 'sent' ? 'active' : ''}}"
+      data-t="sent"
+      bindtap="switchSubTab"
+    >我发出的</view>
+  </view>
+
+  <!-- 状态筛选 -->
+  <view class="filter-row">
+    <view class="filter-chip {{filter === 'all' ? 'active' : ''}}" data-f="all" bindtap="onFilter">全部</view>
+    <view class="filter-chip {{filter === 'pending' ? 'active' : ''}}" data-f="pending" bindtap="onFilter">待确认</view>
+    <view class="filter-chip {{filter === 'confirmed' ? 'active' : ''}}" data-f="confirmed" bindtap="onFilter">已确认</view>
+    <view class="filter-chip {{filter === 'cancelled' ? 'active' : ''}}" data-f="cancelled" bindtap="onFilter">已取消</view>
+  </view>
+
+  <!-- 列表 -->
+  <block wx:if="{{filteredList.length > 0}}">
+    <view wx:for="{{filteredList}}" wx:key="_id" class="card">
+      <view class="row-between">
+        <view class="text-bold">{{item.bookingDate}} {{item.startTime}}-{{item.endTime}}</view>
+        <view class="status-tag status-{{item.status}}">{{item.statusText}}</view>
+      </view>
+
+      <view style="margin-top: 12rpx;">
+        {{item.itemName}} · {{item.itemDurationMinutes}}分钟
+      </view>
+      <view class="text-small text-muted" style="margin-top: 6rpx;">{{item.scheduleName}}</view>
+
+      <view class="divider"></view>
+
+      <!-- 我收到的：显示 Guest 信息 -->
+      <block wx:if="{{subTab === 'received'}}">
+        <view class="text-small">
+          Guest：{{item.guestName || '（未填）'}} · {{item.guestPhone || ''}}
+        </view>
+        <view wx:if="{{item.note}}" class="text-small text-muted" style="margin-top: 6rpx;">
+          备注：{{item.note}}
+        </view>
+        <!-- 操作：pending 可确认/取消；confirmed 可取消 -->
+        <view wx:if="{{item.status === 'pending'}}" class="row-between" style="margin-top: 16rpx;">
+          <view class="op-btn op-danger" data-id="{{item._id}}" bindtap="rejectBooking">取消</view>
+          <view class="op-btn op-primary" data-id="{{item._id}}" bindtap="confirmBooking">确认</view>
+        </view>
+        <view wx:elif="{{item.status === 'confirmed'}}" class="row-between" style="margin-top: 16rpx; justify-content: flex-end;">
+          <view class="op-btn op-danger" data-id="{{item._id}}" bindtap="rejectBooking">取消预约</view>
+        </view>
+      </block>
+
+      <!-- 我发出的：显示自己的备注，pending 可取消 -->
+      <block wx:if="{{subTab === 'sent'}}">
+        <view wx:if="{{item.note}}" class="text-small text-muted">备注：{{item.note}}</view>
+        <view wx:if="{{item.status === 'pending'}}" class="row-between" style="margin-top: 16rpx; justify-content: flex-end;">
+          <view class="op-btn op-danger" data-id="{{item._id}}" bindtap="cancelMyBooking">取消预约</view>
+        </view>
+      </block>
+    </view>
+  </block>
+  <view wx:else class="empty">
+    <view>{{subTab === 'received' ? '暂未收到预约' : '还没发出过预约'}}</view>
+  </view>
+</view>

@@ -1,0 +1,9 @@
+{
+  "name": "getMyScheduleSlots",
+  "version": "1.0.0",
+  "description": "Owner 的日程表信息：每周时段 + 日期覆盖",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

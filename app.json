@@ -1,0 +1,28 @@
+{
+  "pages": [
+    "pages/schedule/schedule",
+    "pages/bookings/bookings",
+    "pages/my/my",
+    "pages/editSchedule/editSchedule",
+    "pages/book/book"
+  ],
+  "window": {
+    "navigationBarTitleText": "约见",
+    "navigationBarBackgroundColor": "#ffffff",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#f4f5f7"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#07c160",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "white",
+    "list": [
+      { "pagePath": "pages/schedule/schedule", "text": "日程表" },
+      { "pagePath": "pages/bookings/bookings", "text": "预约" },
+      { "pagePath": "pages/my/my", "text": "我的" }
+    ]
+  },
+  "sitemapLocation": "sitemap.json",
+  "style": "v2"
+}

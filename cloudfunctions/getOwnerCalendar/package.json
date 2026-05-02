@@ -1,0 +1,9 @@
+{
+  "name": "getOwnerCalendar",
+  "version": "1.0.0",
+  "description": "Owner 的月历数据：指定日期范围内的已确认预约",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

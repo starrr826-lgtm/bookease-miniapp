@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir -p /Users/starryliu/Desktop/booking-miniapp/cloudfunctions/getMyScheduleSlots)",
+      "Bash(mkdir -p /Users/starryliu/Desktop/booking-miniapp/cloudfunctions/setDayOverride)"
+    ]
+  }
+}

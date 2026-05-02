@@ -1,0 +1,89 @@
+/* pages/my/my.wxss */
+
+/* 用户卡片 */
+.user-card {
+  display: flex;
+  align-items: center;
+  padding: 30rpx 24rpx;
+}
+.avatar-img,
+.avatar-placeholder {
+  width: 112rpx;
+  height: 112rpx;
+  border-radius: 50%;
+  margin-right: 24rpx;
+  flex-shrink: 0;
+}
+.avatar-placeholder {
+  background: #d0d0d0;
+  color: #fff;
+  font-size: 48rpx;
+  font-weight: 600;
+  text-align: center;
+  line-height: 112rpx;
+}
+.user-info { flex: 1; min-width: 0; }
+.nickname {
+  font-size: 34rpx;
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 8rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 标题行 */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 8rpx 8rpx 16rpx;
+}
+.section-label {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #666;
+}
+.create-btn {
+  background: #07c160;
+  color: #fff;
+  font-size: 26rpx;
+  font-weight: 500;
+  padding: 10rpx 28rpx;
+  border-radius: 32rpx;
+  line-height: 1;
+}
+
+/* 日程表卡片 */
+.schedule-card { padding-bottom: 20rpx; }
+.schedule-body { padding-bottom: 4rpx; }
+.schedule-name {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 8rpx;
+}
+.schedule-meta {
+  font-size: 24rpx;
+  color: #999;
+}
+.key-text {
+  color: #555;
+  font-weight: 500;
+}
+
+/* 操作行 */
+.action-copy { color: #07c160; }
+.action-group {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+.action-edit { color: #07c160; }
+.action-divider {
+  width: 1rpx;
+  height: 24rpx;
+  background: #e0e0e0;
+}
+.action-delete { color: #e53935; }

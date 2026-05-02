@@ -1,0 +1,47 @@
+<!-- pages/editSchedule/editSchedule.wxml -->
+<view class="container">
+  <!-- 日程表名称 -->
+  <view class="card">
+    <view class="field-label">日程表名称</view>
+    <input class="input" placeholder="例如：老王理发预约" value="{{name}}" bindinput="onInputName" />
+  </view>
+
+  <!-- 服务项目 -->
+  <view class="card">
+    <view class="field-label">服务项目及时长</view>
+    <view wx:for="{{items}}" wx:key="key" class="item-row">
+      <input class="input-inline flex2" placeholder="项目名" value="{{item.name}}" data-idx="{{index}}" bindinput="onInputItemName" />
+      <input class="input-inline flex1" type="number" placeholder="分钟" value="{{item.durationMinutes}}" data-idx="{{index}}" bindinput="onInputItemDuration" />
+      <view class="mini-btn danger" bindtap="removeItem" data-idx="{{index}}">删</view>
+    </view>
+    <view class="add-row" bindtap="addItem">+ 添加项目</view>
+  </view>
+
+  <!-- 周循环时段 -->
+  <view class="card">
+    <view class="field-label">可预约时段（每周循环）</view>
+    <view wx:for="{{weeklySlots}}" wx:key="dayOfWeek" wx:for-item="day">
+      <view class="day-header">{{day.name}}</view>
+      <view wx:for="{{day.slots}}" wx:key="key" wx:for-item="slot" wx:for-index="sIdx" class="slot-row">
+        <picker mode="time" value="{{slot.startTime}}" data-dow="{{day.dayOfWeek}}" data-sidx="{{sIdx}}" data-field="startTime" bindchange="onTimeChange">
+          <view class="time-picker">{{slot.startTime}}</view>
+        </picker>
+        <text class="time-sep">-</text>
+        <picker mode="time" value="{{slot.endTime}}" data-dow="{{day.dayOfWeek}}" data-sidx="{{sIdx}}" data-field="endTime" bindchange="onTimeChange">
+          <view class="time-picker">{{slot.endTime}}</view>
+        </picker>
+        <view class="mini-btn danger" bindtap="removeSlot" data-dow="{{day.dayOfWeek}}" data-sidx="{{sIdx}}">删</view>
+      </view>
+      <view class="add-slot" bindtap="addSlot" data-dow="{{day.dayOfWeek}}">+ 添加时段</view>
+    </view>
+  </view>
+
+  <!-- 保存 -->
+  <view class="btn-primary" bindtap="onSave">保存</view>
+
+  <view wx:if="{{scheduleId}}" style="margin-top: 16rpx;">
+    <view class="text-small text-muted" style="text-align: center; padding: 24rpx 0;">
+      分享码: {{qrCodeKey}}
+    </view>
+  </view>
+</view>

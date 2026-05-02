@@ -1,0 +1,59 @@
+<!-- pages/my/my.wxml -->
+<view class="container">
+
+  <!-- 用户卡片 -->
+  <view class="card user-card">
+    <block wx:if="{{avatarUrl}}">
+      <image class="avatar-img" src="{{avatarUrl}}" mode="aspectFill"></image>
+    </block>
+    <block wx:else>
+      <view class="avatar-placeholder">{{nickname ? nickname[0] : '?'}}</view>
+    </block>
+    <view class="user-info">
+      <view class="nickname">{{nickname || '未设置昵称'}}</view>
+      <view class="text-small link" bindtap="grantProfile">
+        {{nickname ? '更新头像 / 昵称' : '点击获取头像 / 昵称'}}
+      </view>
+    </view>
+  </view>
+
+  <!-- 日程表区标题行 -->
+  <view class="section-header">
+    <view class="section-label">我的日程表</view>
+    <view class="create-btn" bindtap="goCreate">＋ 新建</view>
+  </view>
+
+  <!-- 加载中 -->
+  <view wx:if="{{loading}}" class="empty-inline text-small text-muted">加载中…</view>
+
+  <!-- 列表 -->
+  <block wx:elif="{{schedules.length > 0}}">
+    <view wx:for="{{schedules}}" wx:key="_id" class="card schedule-card">
+      <!-- 点击主体进入编辑 -->
+      <view class="schedule-body" bindtap="openSchedule" data-id="{{item._id}}">
+        <view class="schedule-name">{{item.name}}</view>
+        <view class="schedule-meta">
+          分享码 <text class="key-text">{{item.qrCodeKey}}</text>
+          · {{item.status === 0 ? '已停用' : '已启用'}}
+        </view>
+      </view>
+      <view class="divider"></view>
+      <!-- 操作行 -->
+      <view class="row-between">
+        <view class="action-copy text-small" catchtap="copyShareKey" data-key="{{item.qrCodeKey}}">复制分享码</view>
+        <view class="action-group">
+          <view class="action-edit text-small" catchtap="openSchedule" data-id="{{item._id}}">编辑</view>
+          <view class="action-divider"></view>
+          <view class="action-delete text-small" catchtap="deleteSchedule" data-id="{{item._id}}" data-name="{{item.name}}">删除</view>
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <!-- 空态 -->
+  <view wx:else class="empty">
+    <view>还没有日程表</view>
+    <view class="text-small text-muted" style="margin-top:12rpx;">点击右上角「＋ 新建」创建第一个</view>
+  </view>
+
+</view>

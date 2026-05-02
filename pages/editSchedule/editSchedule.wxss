@@ -1,0 +1,96 @@
+/* pages/editSchedule/editSchedule.wxss */
+.field-label {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 12rpx;
+}
+
+.input {
+  border: 1rpx solid #ebebeb;
+  border-radius: 8rpx;
+  padding: 16rpx 20rpx;
+  font-size: 30rpx;
+  background: #fafafa;
+}
+
+.input-inline {
+  border: 1rpx solid #ebebeb;
+  border-radius: 8rpx;
+  padding: 12rpx 16rpx;
+  font-size: 28rpx;
+  background: #fafafa;
+  margin-right: 12rpx;
+}
+
+.flex1 { flex: 1; }
+.flex2 { flex: 2; }
+
+.item-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.add-row {
+  text-align: center;
+  color: #07c160;
+  font-size: 28rpx;
+  padding: 16rpx 0;
+  border: 2rpx dashed #07c160;
+  border-radius: 8rpx;
+  margin-top: 8rpx;
+}
+
+.day-header {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 500;
+  padding: 16rpx 0 8rpx;
+  border-top: 1rpx solid #ebebeb;
+  margin-top: 8rpx;
+}
+
+.day-header:first-child {
+  border-top: none;
+  margin-top: 0;
+}
+
+.slot-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12rpx;
+  gap: 12rpx;
+}
+
+.time-picker {
+  padding: 8rpx 20rpx;
+  border: 1rpx solid #ebebeb;
+  border-radius: 8rpx;
+  background: #fafafa;
+  font-size: 28rpx;
+  min-width: 100rpx;
+  text-align: center;
+}
+
+.time-sep {
+  color: #999;
+}
+
+.mini-btn {
+  padding: 6rpx 20rpx;
+  font-size: 24rpx;
+  border-radius: 8rpx;
+  margin-left: auto;
+}
+
+.mini-btn.danger {
+  background: #fff1f0;
+  color: #fa5151;
+  border: 1rpx solid #fa5151;
+}
+
+.add-slot {
+  font-size: 26rpx;
+  color: #07c160;
+  padding: 8rpx 0;
+}

@@ -1,0 +1,9 @@
+{
+  "name": "setDayOverride",
+  "version": "1.0.0",
+  "description": "设置或删除某日的时段覆盖",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}

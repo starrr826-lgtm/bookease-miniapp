@@ -1,0 +1,68 @@
+/* app.wxss — 全局通用样式 */
+page {
+  background: #f4f5f7;
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'PingFang SC', sans-serif;
+  font-size: 28rpx;
+  color: #222;
+}
+
+.container {
+  padding: 24rpx;
+  box-sizing: border-box;
+  min-height: 100vh;
+}
+
+.card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.03);
+}
+
+.section-title {
+  font-size: 28rpx;
+  color: #666;
+  margin: 16rpx 8rpx;
+  font-weight: 500;
+}
+
+.text-small { font-size: 24rpx; }
+.text-muted { color: #999; }
+.text-bold { font-weight: 600; }
+
+.row-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.link { color: #07c160; }
+
+.btn {
+  border-radius: 12rpx;
+  font-size: 30rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  text-align: center;
+}
+.btn-primary { background: #07c160; color: #fff; }
+.btn-primary[disabled] { background: #a6d9ba; color: #fff; }
+.btn-ghost { background: #fff; color: #07c160; border: 1rpx solid #07c160; }
+
+.empty {
+  padding: 120rpx 24rpx;
+  text-align: center;
+  color: #999;
+  font-size: 28rpx;
+}
+.empty-inline {
+  padding: 40rpx 24rpx;
+  text-align: center;
+}
+
+.divider {
+  height: 1rpx;
+  background: #f0f0f0;
+  margin: 16rpx 0;
+}
