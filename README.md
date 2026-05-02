@@ -1,173 +1,252 @@
-# 预约管家 小程序 MVP
+# 约见 · BookEase
 
-一个基于**微信云开发**的预约管理小程序 MVP，包含 Owner（服务提供者）和 Guest（预约者）两端的核心闭环。
-
-> ⚠️ **第一次做小程序必看**：从零到跑起来大约需要 1 小时，请按本文档顺序执行。
+> 一款基于微信云开发的预约管理小程序，让服务提供者轻松管理时间，让用户一键完成预约。
+>
+> A WeChat Mini Program for appointment scheduling — letting service providers manage availability and clients book in seconds.
 
 ---
 
-## 目录结构
+## 目录 / Table of Contents
+
+- [产品简介 / Overview](#产品简介--overview)
+- [核心功能 / Features](#核心功能--features)
+- [技术栈 / Tech Stack](#技术栈--tech-stack)
+- [快速开始 / Getting Started](#快速开始--getting-started)
+- [项目结构 / Project Structure](#项目结构--project-structure)
+- [数据库结构 / Database Schema](#数据库结构--database-schema)
+- [常见问题 / FAQ](#常见问题--faq)
+
+---
+
+## 产品简介 / Overview
+
+**约见**是一款面向个人服务提供者（顾问、导师、自由职业者等）的微信小程序。Owner（服务提供者）设置每周可预约时段，生成专属分享码，Guest（预约者）扫码或输入分享码即可查看日历、选时段、完成预约。全程无需第三方平台，基于微信云开发，开箱即用。
+
+**BookEase** is a WeChat Mini Program for individual service providers (consultants, tutors, freelancers, etc.). Owners configure weekly availability and share a unique booking link or 6-digit code. Guests view a live calendar, pick a slot, and submit a booking — all within WeChat, powered by WeChat Cloud Development with zero backend setup.
+
+---
+
+## 核心功能 / Features
+
+### Owner（服务提供者）
+
+| 功能 | 说明 |
+|---|---|
+| 创建日程表 | 设置服务名称、描述、服务项目（名称 + 时长） |
+| 配置周循环时段 | 为每周各天设置可预约时间窗口 |
+| 日期自定义覆盖 | 单独调整某一天的时段（放假 / 临时加班）|
+| 月历总览 | 查看本月所有已确认预约，点击日期看当日详情 |
+| 确认 / 取消预约 | 在「预约」Tab 一键审核访客预约请求 |
+| 分享码 | 每张日程表生成唯一 6 位分享码，便于分发 |
+
+### Guest（预约者）
+
+| 功能 | 说明 |
+|---|---|
+| 输入分享码进入 | 在小程序内直接输入分享码，无需扫码 |
+| 月历查看可约日期 | 绿点标注有可用时段的日期 |
+| 选服务 + 选时间 | 先选服务项目，再选对应日期的时间段 |
+| 提交预约 | 填写称呼和手机号后提交，带时段冲突检测 |
+| 查看我的预约 | 在「预约」Tab 查看发出的所有预约及状态 |
+| 取消预约 | 对未确认的预约可自行取消 |
+
+---
+
+## 技术栈 / Tech Stack
+
+| 层 | 技术 |
+|---|---|
+| 前端 | 微信小程序原生（WXML / WXSS / JS） |
+| 后端 | 微信云开发云函数（Node.js） |
+| 数据库 | 微信云数据库（文档型 NoSQL） |
+| 部署 | 微信云开发（无需自建服务器） |
+
+| Layer | Technology |
+|---|---|
+| Frontend | WeChat Mini Program (WXML / WXSS / JS) |
+| Backend | WeChat Cloud Functions (Node.js) |
+| Database | WeChat Cloud Database (document-based NoSQL) |
+| Hosting | WeChat Cloud Development (no server required) |
+
+---
+
+## 快速开始 / Getting Started
+
+### 前置条件 / Prerequisites
+
+- [微信开发者工具](https://developers.weixin.qq.com/miniprogram/dev/devtools/download.html)（最新稳定版）
+- 一个微信小程序账号（[注册地址](https://mp.weixin.qq.com)）
+- 已开通**微信云开发**并获取**环境 ID**
+
+### Step 1 — 获取 AppID 和云开发环境 ID
+
+1. 前往 [mp.weixin.qq.com](https://mp.weixin.qq.com) → 「开发管理」→「开发设置」→ 复制 **AppID**
+2. 左侧「云开发」→ 开通并创建环境 → 复制**环境 ID**（形如 `booking-dev-1abc23def`）
+
+### Step 2 — 替换配置占位符
+
+**`project.config.json`** 中替换 AppID：
+```json
+"appid": "你的AppID"
+```
+
+**`app.js`** 中替换云环境 ID：
+```js
+wx.cloud.init({
+  env: '你的云环境ID',
+  traceUser: true,
+})
+```
+
+### Step 3 — 导入项目
+
+打开微信开发者工具 → 左上角「+」→「导入项目」→ 选择本项目目录 → 确定
+
+### Step 4 — 创建数据库集合
+
+开发者工具 → 云开发面板 → 数据库 → 依次创建以下集合（名称必须完全一致）：
 
 ```
-booking-miniapp/
-├── app.js / app.json / app.wxss       # 小程序入口和全局配置
-├── sitemap.json
-├── project.config.json                # 项目配置（AppID 在这里）
-├── utils/util.js                      # 日期/调用云函数工具
+users
+schedules
+service_items
+weekly_slots
+bookings
+day_overrides
+```
+
+> 所有读写均通过云函数完成，集合权限保持默认即可。
+
+### Step 5 — 部署云函数
+
+在开发者工具左侧资源管理器中，对 `cloudfunctions/` 下每个文件夹右键 →「上传并部署：云端安装依赖」：
+
+```
+login               createSchedule      updateSchedule
+getMySchedules      getScheduleDetail   deleteSchedule
+getMyScheduleSlots  getOwnerCalendar    setDayOverride
+createBooking       listBookings        updateBookingStatus
+getScheduleByKey    getMyVisitedSchedules  unvisitSchedule
+```
+
+### Step 6 — 编译运行
+
+点击工具栏「编译」（或 `Ctrl/Cmd + B`），模拟器即可运行。
+
+---
+
+**Getting Started (English Summary)**
+
+1. Register a WeChat Mini Program account and enable Cloud Development to obtain an **AppID** and **Cloud Env ID**.
+2. Replace the two placeholders in `project.config.json` (`appid`) and `app.js` (`env`).
+3. Import the project folder into WeChat DevTools.
+4. Create the 6 database collections listed above via the Cloud Development console.
+5. Right-click each cloud function folder → **Upload and Deploy** (all 15 functions).
+6. Hit **Compile** — the app runs in the simulator.
+
+---
+
+## 项目结构 / Project Structure
+
+```
+bookease-miniapp/
+├── app.js                          # 全局入口，处理分享链接 / Cloud init
+├── app.json                        # 页面路由 + TabBar 配置
+├── app.wxss                        # 全局样式
+├── utils/util.js                   # 日期工具 + 云函数封装 + loading 管理
+│
 ├── pages/
-│   ├── my/                            # "我的" Tab：用户资料 + 自己的日程表列表
-│   ├── schedule/                      # "日程表" Tab：日历视图看预约
-│   ├── pending/                       # "待确认" Tab：审核/查看预约
-│   ├── editSchedule/                  # 创建/编辑日程表
-│   ├── guestView/                     # Guest 扫码/点分享进来看到的页面
-│   └── book/                          # Guest 填表提交预约
+│   ├── schedule/                   # 「日程表」Tab：月历 + 双子 Tab
+│   │   ├── 我的日程表              # Owner 视角：月历 + 当日预约列表 + 时段管理
+│   │   └── 他人的日程表            # Guest 视角：已访问列表 / 详情月历 / 预约入口
+│   ├── bookings/                   # 「预约」Tab：收到的(Owner) / 发出的(Guest)
+│   ├── editSchedule/               # 创建 / 编辑日程表（服务项 + 周时段）
+│   └── book/                       # Guest 填写预约表单
+│
 └── cloudfunctions/
-    ├── login/                         # 首次打开时拿 openid 并注册用户
-    ├── createSchedule/                # 创建日程表
-    ├── getMySchedules/                # 列出我的日程表
-    ├── getScheduleDetail/             # 获取日程表详情（Owner 编辑/Guest 查看复用）
-    ├── updateSchedule/                # 更新日程表
-    ├── createBooking/                 # Guest 提交预约（带冲突检测）
-    ├── listBookings/                  # 列出预约（按 Owner/Guest 视角过滤）
-    └── updateBookingStatus/           # 确认/取消预约
+    ├── login/                      # 首次登录 + upsert 用户
+    ├── createSchedule/             # 创建日程表
+    ├── updateSchedule/             # 更新日程表
+    ├── deleteSchedule/             # 删除日程表
+    ├── getMySchedules/             # 获取 Owner 的日程表列表
+    ├── getScheduleDetail/          # 获取日程表详情（含服务项 + 时段）
+    ├── getMyScheduleSlots/         # Owner 月历：周时段 + 日期覆盖
+    ├── getOwnerCalendar/           # Owner 月历：已确认预约列表
+    ├── setDayOverride/             # 设置某日的自定义时段
+    ├── getScheduleByKey/           # 通过分享码查询日程表
+    ├── createBooking/              # Guest 提交预约（含冲突检测）
+    ├── listBookings/               # 查询预约列表（Owner/Guest 双角色）
+    ├── updateBookingStatus/        # 确认 / 取消预约
+    ├── getMyVisitedSchedules/      # Guest 已访问的日程表列表
+    └── unvisitSchedule/            # 从已访问列表中移除
 ```
 
 ---
 
-## 📋 跑起来的完整步骤
+## 数据库结构 / Database Schema
 
-### Step 1. 注册小程序账号拿到 AppID（10 分钟）
+### `schedules`
+| 字段 | 类型 | 说明 |
+|---|---|---|
+| `ownerOpenid` | string | Owner 标识 |
+| `name` | string | 日程表名称 |
+| `description` | string | 描述（可空） |
+| `qrCodeKey` | string | 6 位分享码 |
+| `status` | number | `1` 启用 / `0` 停用 |
 
-1. 打开 ://mp.weixin.qq.com
-2. 点右上角「立https即注册」→ 选「小程序」
-3. 填邮箱（**必须是没注册过公众号/小程序的邮箱**）→ 设密码 → 邮箱激活
-4. 填主体信息（个人：微信扫码 + 身份证号即可，免费）
-5. 进入管理后台 → 左侧「开发管理」→「开发设置」→ 复制 **AppID**，类似 `wx1234567890abcdef`
+### `service_items`
+| 字段 | 类型 | 说明 |
+|---|---|---|
+| `scheduleId` | string | 所属日程表 |
+| `name` | string | 服务名称 |
+| `durationMinutes` | number | 单次时长（分钟） |
 
-### Step 2. 在管理后台开通云开发（5 分钟）
+### `weekly_slots`
+| 字段 | 类型 | 说明 |
+|---|---|---|
+| `scheduleId` | string | 所属日程表 |
+| `dayOfWeek` | number | `1`=周一 … `7`=周日 |
+| `startTime` / `endTime` | string | `'HH:mm'` 格式 |
 
-1. 在管理后台左侧点「**云开发**」
-2. 第一次会弹「开通云开发」→ 点同意
-3. 创建环境（填个名字随意，如 `booking-dev`）→ 选「**按量付费**」
-   - 个人学习够用免费额度（每月几万次调用），不会扣钱
-4. 创建后复制**环境 ID**（形如 `booking-dev-1abc23def`）
+### `bookings`
+| 字段 | 类型 | 说明 |
+|---|---|---|
+| `scheduleId` / `ownerOpenid` | string | 归属 |
+| `itemId` / `itemName` | string | 服务项 |
+| `bookingDate` | string | `'YYYY-MM-DD'` |
+| `startTime` / `endTime` | string | `'HH:mm'` |
+| `guestOpenid` / `guestName` / `guestPhone` | string | 访客信息 |
+| `status` | string | `'pending'` / `'confirmed'` / `'cancelled'` |
 
-### Step 3. 替换代码里的两个占位符
-
-项目里有**两处**你必须改：
-
-1. **`project.config.json` 里的 `appid`**
-   ```json
-   "appid": "wxXXXXXXXXXXXXXXXX"  ←  换成你的 AppID
-   ```
-
-2. **`app.js` 里的 `env`**
-   ```js
-   wx.cloud.init({
-     env: 'YOUR-CLOUD-ENV-ID',    ←  换成你的环境 ID
-     traceUser: true,
-   })
-   ```
-
-### Step 4. 用开发者工具导入项目
-
-1. 把整个 `booking-miniapp` 文件夹从 Claude 的 outputs 文件夹**复制到你电脑上**（比如 `~/Documents/booking-miniapp/`）
-2. 打开「微信开发者工具」
-3. 左上角点「+」→「导入项目」
-4. 「目录」选刚才那个文件夹 → AppID 会自动从 `project.config.json` 读到 → 点「**确定**」
-
-进入后你会看到代码+模拟器双栏界面。
-
-### Step 5. 创建数据库集合（2 分钟）
-
-这个项目用了 6 个数据库集合，需要手动创建（只要第一次）：
-
-1. 开发者工具顶部点「**云开发**」按钮 → 打开云开发面板
-2. 点「**数据库**」标签页
-3. 点「+」新建集合，依次创建这 6 个（名字必须一样）：
-   - `users`
-   - `schedules`
-   - `service_items`
-   - `weekly_slots`
-   - `bookings`
-
-> 提示：每个集合默认权限是「仅创建者可读写」。但本项目所有读写都经过云函数，云函数有**管理员权限**，所以无需额外改。
-
-### Step 6. 部署 8 个云函数（5 分钟）
-
-在开发者工具左侧**资源管理器**（类似 VSCode 侧边栏）里：
-
-1. 展开 `cloudfunctions` 目录
-2. 右键 `login` 文件夹 → 选「**上传并部署：云端安装依赖（不上传 node_modules）**」
-3. 等待提示「上传成功」
-4. 对 **剩下 7 个云函数** 重复同样操作：
-   - createSchedule
-   - getMySchedules
-   - getScheduleDetail
-   - updateSchedule
-   - createBooking
-   - listBookings
-   - updateBookingStatus
-
-> 💡 每个云函数第一次部署大约 20–40 秒（因为要装 `wx-server-sdk`）
-
-### Step 7. 跑起来！
-
-1. 点工具栏的「**编译**」按钮（或按 Ctrl/Cmd+B）
-2. 左侧模拟器会刷新，进入小程序
-3. 可以在三个 Tab 之间切换：日程表 / 待确认 / 我的
+### `day_overrides`
+| 字段 | 类型 | 说明 |
+|---|---|---|
+| `scheduleId` | string | 所属日程表 |
+| `date` | string | `'YYYY-MM-DD'` |
+| `slots` | array | `[{startTime, endTime}]`，空数组表示该日不可约 |
 
 ---
 
-## 🧪 完整跑一遍核心流程（自测）
+## 常见问题 / FAQ
 
-**作为 Owner：**
-1. 打开小程序 → 进「我的」Tab
-2. 点「+ 创建新日程表」→ 填名字「测试日程」→ 添加一个项目「咨询」时长 60 分钟 → 保存
-3. 回到「我的」Tab → 可以看到刚创建的日程表，右下角有个 6 位分享码（如 `AB3CDE`）
-4. 点日程表卡片的「分享」按钮 → 按提示点右上角「···」→「转发」 → 发给自己（通过文件传输助手或另一个微信号）
+**Q: 云函数调用失败 / Cloud function call failed**  
+检查 `app.js` 中的 `env` 是否填写正确，并确认对应云函数已部署成功。  
+Check that the `env` value in `app.js` matches your Cloud Development environment ID, and that all functions are deployed.
 
-**作为 Guest（在另一个微信号/测试号上）：**
-5. 点收到的分享卡片 → 进入 guestView 页
-6. 点日历上有绿点的日期 → 下方出现可预约时段 → 点「预约」
-7. 选项目、时间、填手机号 → 提交
-8. 跳到「待确认」Tab → 看到自己的预约处于「待确认」
+**Q: 日历上没有绿点 / No dots on the calendar**  
+确认已创建日程表，且为对应星期设置了每周时段。  
+Make sure a schedule exists and weekly slots have been configured for the relevant days.
 
-**切回 Owner：**
-9. 打开「待确认」Tab（作为 Owner 视角） → 看到 Guest 的请求
-10. 点「确认」→ 状态变为「已确认」
-11. 回「日程表」Tab → 选那一天 → 看到这条预约
+**Q: 输入分享码提示"日程表不存在" / "Schedule not found" when entering a code**  
+确认日程表状态为启用（`status: 1`），分享码区分大小写。  
+Verify the schedule is active (`status: 1`) and the code is entered with correct casing.
 
-## 🐛 常见问题
-
-**Q: 模拟器报错 "云函数 login 调用失败"**
-A: 检查云开发环境 ID 是否填对；检查 `login` 云函数是否部署成功。
-
-**Q: 创建日程表后看不到**
-A: 检查 `schedules` 集合是否建了；打开云开发面板 → 数据库 → schedules 看看有没有数据。
-
-**Q: 分享链接打开是"日程表不存在"**
-A: 别直接手改 URL。正规流程：从「我的」→ 分享按钮 → 右上角转发。
-
-**Q: 想看云函数日志**
-A: 云开发面板 → 云函数 → 选中对应函数 → 点「日志」标签。
+**Q: 预约提交后 Owner 看不到 / Owner cannot see submitted bookings**  
+检查 `listBookings` 云函数是否部署；打开云开发控制台 → 云函数 → 查看函数日志排查。  
+Check that `listBookings` is deployed; use the Cloud Development console → Functions → Logs to debug.
 
 ---
 
-## 🎯 MVP 范围说明
+## License
 
-**已实现：**
-- 用户首次打开自动登录（拿 openid）
-- Owner：创建/编辑日程表（名字、项目、周循环时段）、分享给 Guest、日历视图看预约、确认/拒绝预约
-- Guest：通过分享链接进入、查看日历、提交预约（含时段冲突检测）、查看自己的预约、取消
-
-**暂未实现（你可以后面自己加）：**
-- 特定日期临时调整可预约时段（`date_override` 表）
-- 微信订阅消息（预约确认后通知 Guest）
-- Owner 端的个人信息编辑
-- 生成实体二维码图片（目前用分享卡片，体验更好）
-- 数据库索引优化（用户多起来前不急）
-
-## 📞 帮助
-
-按步骤走如果卡住了，来找我，把报错信息贴给我就好。
+MIT
