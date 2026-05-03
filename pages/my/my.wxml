@@ -3,17 +3,21 @@
 
   <!-- 用户卡片 -->
   <view class="card user-card">
-    <block wx:if="{{avatarUrl}}">
-      <image class="avatar-img" src="{{avatarUrl}}" mode="aspectFill"></image>
-    </block>
-    <block wx:else>
-      <view class="avatar-placeholder">{{nickname ? nickname[0] : '?'}}</view>
-    </block>
+    <view class="avatar-wrap">
+      <image wx:if="{{avatarUrl}}" class="avatar-img" src="{{avatarUrl}}" mode="aspectFill"></image>
+      <view wx:else class="avatar-placeholder">{{nickname ? nickname[0] : '?'}}</view>
+      <button class="avatar-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar"></button>
+    </view>
     <view class="user-info">
-      <view class="nickname">{{nickname || '未设置昵称'}}</view>
-      <view class="text-small link" bindtap="grantProfile">
-        {{nickname ? '更新头像 / 昵称' : '点击获取头像 / 昵称'}}
-      </view>
+      <input
+        class="nickname-input"
+        type="nickname"
+        value="{{nickname}}"
+        placeholder="点击填写昵称"
+        placeholder-class="nickname-placeholder"
+        bindblur="onNicknameBlur"
+      />
+      <view class="text-small text-muted" style="margin-top: 4rpx;">点击头像换图 · 点击昵称编辑</view>
     </view>
   </view>
 

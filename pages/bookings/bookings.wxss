@@ -53,18 +53,4 @@
   align-items: center;
 }
 
-/* ===== 操作按钮 ===== */
-.op-btn {
-  padding: 14rpx var(--sp-4);
-  font-size: var(--fs-base);
-  border-radius: var(--radius-sm);
-  font-weight: 500;
-}
-.op-primary {
-  background: var(--color-primary);
-  color: var(--color-on-primary);
-}
-.op-danger {
-  color: var(--color-danger);
-  border: 2rpx solid var(--color-danger);
-}
+/* op-btn / op-primary / op-danger 已提升至 app.wxss */

@@ -38,16 +38,23 @@ Page({
       })
   },
 
-  grantProfile() {
-    wx.getUserProfile({
-      desc: '用于在日程表中展示你的头像和昵称',
-      success: (res) => {
-        const u = res.userInfo || {}
-        wx.setStorageSync('userInfo', u)
-        this.setData({ nickname: u.nickName || '', avatarUrl: u.avatarUrl || '' })
-        util.callFn('login', { nickname: u.nickName, avatarUrl: u.avatarUrl }, { silent: true }).catch(() => {})
-      },
-    })
+  onChooseAvatar(e) {
+    const avatarUrl = e.detail.avatarUrl
+    this.setData({ avatarUrl })
+    const info = wx.getStorageSync('userInfo') || {}
+    info.avatarUrl = avatarUrl
+    wx.setStorageSync('userInfo', info)
+    util.callFn('login', { avatarUrl }, { silent: true }).catch(() => {})
+  },
+
+  onNicknameBlur(e) {
+    const nickname = (e.detail.value || '').trim()
+    if (!nickname) return
+    this.setData({ nickname })
+    const info = wx.getStorageSync('userInfo') || {}
+    info.nickName = nickname
+    wx.setStorageSync('userInfo', info)
+    util.callFn('login', { nickname }, { silent: true }).catch(() => {})
   },
 
   goCreate() {

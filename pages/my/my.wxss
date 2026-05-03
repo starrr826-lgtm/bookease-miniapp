@@ -7,15 +7,25 @@
   padding: var(--sp-4) var(--sp-3);
   background: linear-gradient(135deg, #FDF0E6 0%, #FFFFFF 60%);
 }
-.avatar-img,
-.avatar-placeholder {
+
+/* 头像容器：作为 flex item 和圆形裁剪层 */
+.avatar-wrap {
+  position: relative;
   width: 120rpx;
   height: 120rpx;
   border-radius: 50%;
-  margin-right: var(--sp-3);
+  overflow: hidden;
   flex-shrink: 0;
+  margin-right: var(--sp-3);
+}
+.avatar-img {
+  width: 120rpx;
+  height: 120rpx;
+  display: block;
 }
 .avatar-placeholder {
+  width: 120rpx;
+  height: 120rpx;
   background: var(--color-primary);
   color: var(--color-on-primary);
   font-size: 52rpx;
@@ -23,15 +33,34 @@
   text-align: center;
   line-height: 120rpx;
 }
+/* button 铺满容器作为透明点击层，不参与布局 */
+.avatar-btn {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 120rpx;
+  height: 120rpx;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  border: none;
+  opacity: 0;
+}
+.avatar-btn::after { display: none; }
 .user-info { flex: 1; min-width: 0; }
-.nickname {
+
+/* 昵称输入框 */
+.nickname-input {
   font-size: var(--fs-md);
   font-weight: 600;
   color: var(--color-text-primary);
-  margin-bottom: 8rpx;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  margin-bottom: 4rpx;
+  width: 100%;
+}
+.nickname-placeholder {
+  font-size: var(--fs-md);
+  font-weight: 600;
+  color: var(--color-text-disabled);
 }
 
 /* ===== 标题行 ===== */

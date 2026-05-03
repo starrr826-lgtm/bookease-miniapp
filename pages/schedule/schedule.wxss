@@ -25,9 +25,7 @@
 }
 
 /* ===== 他人列表项 ===== */
-.visited-item  { align-items: center; }
-.visited-right { display: flex; flex-direction: column; align-items: flex-end; }
-.text-green    { color: var(--color-accent); font-weight: 500; }
+.visited-item { /* card 已提供全部 shape，此处留作扩展占位 */ }
 
 /* ===== 未创建日程表 ===== */
 .no-schedule-wrap {

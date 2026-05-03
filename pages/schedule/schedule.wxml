@@ -25,25 +25,27 @@
         <view
           wx:for="{{visitedList}}"
           wx:key="_id"
-          class="card row-between visited-item"
+          class="card visited-item"
           data-key="{{item.qrCodeKey}}"
           bindtap="tapVisited"
         >
-          <view>
-            <view class="text-bold" style="font-size: 30rpx;">{{item.name}}</view>
-            <view class="text-small text-muted" style="margin-top: 6rpx;">
-              分享码 {{item.qrCodeKey}} · {{item.status === 0 ? '已停用' : '已启用'}}
+          <view class="row-between">
+            <view class="text-bold">{{item.name}}</view>
+            <view class="status-tag {{item.status === 0 ? 'status-cancelled' : 'status-confirmed'}}">
+              {{item.status === 0 ? '已停用' : '已启用'}}
             </view>
           </view>
-          <view class="visited-right">
-            <view class="text-small text-green">进入 ›</view>
-            <view class="text-small link text-muted" style="margin-top: 12rpx;" catchtap="unvisit" data-id="{{item._id}}">移除</view>
+          <view class="text-small text-muted" style="margin-top: 6rpx;">分享码 {{item.qrCodeKey}}</view>
+          <view class="divider"></view>
+          <view class="row-between">
+            <view class="op-btn op-danger" catchtap="unvisit" data-id="{{item._id}}">移除</view>
+            <view class="op-btn op-primary">进入 ›</view>
           </view>
         </view>
       </block>
       <view wx:else class="empty">
-        <view>这里会显示你访问过的别人的营业日程表</view>
-        <view class="text-small text-muted" style="margin-top: 12rpx;">也可通过扫描二维码或打开分享链接添加</view>
+        <view>这里会显示您访问过的别人的营业日程表</view>
+        <view class="text-small text-muted" style="margin-top: 12rpx;">也可通过扫描二维码或打开分享链接浏览他人的营业日程表</view>
       </view>
     </block>
   </block>

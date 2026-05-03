@@ -376,7 +376,7 @@ Page({
     if (hasConflict) {
       wx.showModal({
         title: '注意',
-        content: '该时段已有预约，修改后部分预约可能被取消，建议联系顾客确认，是否继续修改？',
+        content: '该时段已有预约，修改后部分预约会被取消，建议联系顾客确认，是否继续修改？',
         confirmText: '继续修改',
         cancelText: '返回',
         confirmColor: '#E07B3C',
