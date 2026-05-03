@@ -347,7 +347,7 @@ Page({
   },
 
   saveDaySlots() {
-    const { editingDaySlots, ownerScheduleId, selectedDate } = this.data
+    const { editingDaySlots, ownerScheduleId, selectedDate, ownerBookingsByDate } = this.data
     for (const s of editingDaySlots) {
       if (s.startTime >= s.endTime) {
         wx.showToast({ title: '开始时间必须早于结束时间', icon: 'none' })
@@ -355,13 +355,39 @@ Page({
       }
     }
     const slots = editingDaySlots.map(s => ({ startTime: s.startTime, endTime: s.endTime }))
-    util.callFn('setDayOverride', { scheduleId: ownerScheduleId, date: selectedDate, slots })
-      .then(() => {
-        wx.showToast({ title: '已保存', icon: 'success' })
-        this.setData({ editingDaySlots: null })
-        this.loadOwnerData()
+
+    const doSave = () => {
+      util.callFn('setDayOverride', { scheduleId: ownerScheduleId, date: selectedDate, slots })
+        .then(() => {
+          wx.showToast({ title: '已保存', icon: 'success' })
+          this.setData({ editingDaySlots: null })
+          this.loadOwnerData()
+        })
+        .catch(() => {})
+    }
+
+    // 检查是否有预约不被新时段覆盖（排除已取消）
+    const bookings = (ownerBookingsByDate[selectedDate] || [])
+      .filter(b => b.status !== 'cancelled')
+    const hasConflict = bookings.some(b =>
+      !slots.some(s => s.startTime <= b.startTime && s.endTime >= b.endTime)
+    )
+
+    if (hasConflict) {
+      wx.showModal({
+        title: '注意',
+        content: '该时段已有预约，修改后部分预约可能被取消，建议联系顾客确认，是否继续修改？',
+        confirmText: '继续修改',
+        cancelText: '返回',
+        confirmColor: '#E07B3C',
+        success: (r) => {
+          if (!r.confirm) return
+          doSave()
+        },
       })
-      .catch(() => {})
+    } else {
+      doSave()
+    }
   },
 
   resetDaySlots() {

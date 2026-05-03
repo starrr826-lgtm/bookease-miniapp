@@ -2,15 +2,15 @@
 <view class="container">
   <!-- 日程表名称 -->
   <view class="card">
-    <view class="field-label">日程表名称</view>
-    <input class="input" placeholder="例如：老王理发预约" value="{{name}}" bindinput="onInputName" />
+    <view class="field-label">营业日程表名称</view>
+    <input class="input" placeholder="如：满满的美甲店" value="{{name}}" bindinput="onInputName" />
   </view>
 
   <!-- 服务项目 -->
   <view class="card">
     <view class="field-label">服务项目及时长</view>
     <view wx:for="{{items}}" wx:key="key" class="item-row">
-      <input class="input-inline flex2" placeholder="项目名" value="{{item.name}}" data-idx="{{index}}" bindinput="onInputItemName" />
+      <input class="input-inline flex2" placeholder="如：卸甲，延长款式" value="{{item.name}}" data-idx="{{index}}" bindinput="onInputItemName" />
       <input class="input-inline flex1" type="number" placeholder="如：60" value="{{item.durationMinutes}}" data-idx="{{index}}" bindinput="onInputItemDuration" />
       <text class="unit-label">分钟</text>
       <view class="mini-btn danger" bindtap="removeItem" data-idx="{{index}}">×</view>

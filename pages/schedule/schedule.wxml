@@ -3,8 +3,8 @@
 
   <!-- 顶部子 tab -->
   <view class="sub-tabs">
-    <view class="sub-tab {{subTab === 'mine' ? 'active' : ''}}" data-t="mine" bindtap="switchSubTab">我的日程表</view>
-    <view class="sub-tab {{subTab === 'others' ? 'active' : ''}}" data-t="others" bindtap="switchSubTab">他人的日程表</view>
+    <view class="sub-tab {{subTab === 'mine' ? 'active' : ''}}" data-t="mine" bindtap="switchSubTab">我的营业日程</view>
+    <view class="sub-tab {{subTab === 'others' ? 'active' : ''}}" data-t="others" bindtap="switchSubTab">TA的可约时间</view>
   </view>
 
   <!-- ========= 他人的日程表 - 列表态 ========= -->
@@ -12,7 +12,7 @@
     <view class="card key-input-row">
       <input
         class="key-input"
-        placeholder="输入分享码查找日程表"
+        placeholder="输入分享码查找他人的营业日程"
         value="{{inputKey}}"
         bindinput="onInputKey"
         confirm-type="search"
@@ -42,8 +42,8 @@
         </view>
       </block>
       <view wx:else class="empty">
-        <view>这里会显示你访问过的别人的日程表</view>
-        <view class="text-small text-muted" style="margin-top: 12rpx;">扫描对方的二维码或打开分享链接即可添加</view>
+        <view>这里会显示你访问过的别人的营业日程表</view>
+        <view class="text-small text-muted" style="margin-top: 12rpx;">也可通过扫描二维码或打开分享链接添加</view>
       </view>
     </block>
   </block>
@@ -52,9 +52,9 @@
   <block wx:if="{{subTab === 'mine' && ownerHasSchedule === false}}">
     <view class="no-schedule-wrap">
       <view class="no-schedule-icon">📅</view>
-      <view class="no-schedule-title">还没有创建营业时间表</view>
+      <view class="no-schedule-title">还未创建我的营业日程表</view>
       <view class="no-schedule-desc">创建后可让他人预约你的时间</view>
-      <view class="btn-primary" style="margin-top: 40rpx;" bindtap="goCreateSchedule">创建我的营业时间</view>
+      <view class="btn-primary" style="margin-top: 40rpx;" bindtap="goCreateSchedule">创建我的营业日程表</view>
     </view>
   </block>
 
@@ -124,7 +124,7 @@
     <block wx:if="{{subTab === 'mine'}}">
 
       <!-- 当日营业时段 -->
-      <view class="section-title">{{selectedDate}} · 当日营业时段</view>
+      <view class="section-title">{{selectedDate}} · 营业时段</view>
 
       <!-- 编辑态 -->
       <block wx:if="{{editingDaySlots !== null}}">
@@ -139,7 +139,7 @@
             </picker>
             <view class="mini-btn-danger" bindtap="removeEditSlot" data-idx="{{sIdx}}">×</view>
           </view>
-          <view class="add-slot-row" bindtap="addEditSlot">+ 添加时段</view>
+          <view class="add-slot-row" bindtap="addEditSlot">+ 添加营业时段</view>
           <view class="edit-action-row">
             <view class="btn-outline-sm" bindtap="cancelEditDaySlots">取消</view>
             <view class="btn-green-sm" bindtap="saveDaySlots">保存</view>
@@ -153,22 +153,24 @@
           <block wx:if="{{daySlots.length > 0}}">
             <view wx:for="{{daySlots}}" wx:key="*this" class="slot-display-row">
               <view class="slot-time-tag">{{item.startTime}} — {{item.endTime}}</view>
-              <view wx:if="{{dayHasOverride}}" class="override-badge">已自定义</view>
+              <view wx:if="{{dayHasOverride}}" class="override-badge">已调整</view>
             </view>
+            <view class="divider"></view>
             <view class="slot-link-row">
-              <view class="link text-small" bindtap="startEditDaySlots">自定义该日时段</view>
-              <view wx:if="{{dayHasOverride}}" class="link text-small text-muted" bindtap="resetDaySlots">· 恢复默认</view>
+              <view class="slot-btn-edit" bindtap="startEditDaySlots">修改当天营业时间</view>
+              <view wx:if="{{dayHasOverride}}" class="slot-btn-reset" bindtap="resetDaySlots">恢复默认</view>
             </view>
           </block>
           <block wx:else>
-            <view class="text-small text-muted">该日无营业时段</view>
-            <view class="link text-small" style="margin-top: 12rpx;" bindtap="startEditDaySlots">+ 为该日添加时段</view>
+            <view class="text-small text-muted">暂无营业安排</view>
+            <view class="divider"></view>
+            <view class="slot-btn-edit" bindtap="startEditDaySlots">修改当天营业时间</view>
           </block>
         </view>
       </block>
 
       <!-- 当日已确认预约 -->
-      <view class="section-title">当日已确认预约</view>
+      <view class="section-title">已确认预约</view>
       <block wx:if="{{ownerSelectedList.length > 0}}">
         <view wx:for="{{ownerSelectedList}}" wx:key="_id" class="card">
           <view class="row-between">
@@ -185,7 +187,7 @@
           <view wx:if="{{item.note}}" class="text-small text-muted" style="margin-top: 6rpx;">备注：{{item.note}}</view>
         </view>
       </block>
-      <view wx:else class="empty-inline text-small text-muted">当日没有已确认的预约</view>
+      <view wx:else class="empty-inline text-small text-muted">暂无已确认预约</view>
     </block>
 
     <!-- ====== 他人详情态 下半屏 ====== -->

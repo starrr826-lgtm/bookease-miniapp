@@ -1,4 +1,4 @@
-# 约见 · BookEase
+# 明天有空吗 · BookEase
 
 > 一款基于微信云开发的预约管理小程序，让服务提供者轻松管理时间，让用户一键完成预约。
 >
@@ -20,7 +20,7 @@
 
 ## 产品简介 / Overview
 
-**约见**是一款面向个人服务提供者（顾问、导师、自由职业者等）的微信小程序。Owner（服务提供者）设置每周可预约时段，生成专属分享码，Guest（预约者）扫码或输入分享码即可查看日历、选时段、完成预约。全程无需第三方平台，基于微信云开发，开箱即用。
+**明天有空吗**是一款面向个人服务提供者（顾问、导师、自由职业者等）的微信小程序。Owner（服务提供者）设置每周可预约时段，生成专属分享码，Guest（预约者）扫码或输入分享码即可查看日历、选时段、完成预约。全程无需第三方平台，基于微信云开发，开箱即用。
 
 **BookEase** is a WeChat Mini Program for individual service providers (consultants, tutors, freelancers, etc.). Owners configure weekly availability and share a unique booking link or 6-digit code. Guests view a live calendar, pick a slot, and submit a booking — all within WeChat, powered by WeChat Cloud Development with zero backend setup.
 
@@ -246,7 +246,3 @@ Verify the schedule is active (`status: 1`) and the code is entered with correct
 Check that `listBookings` is deployed; use the Cloud Development console → Functions → Logs to debug.
 
 ---
-
-## License
-
-MIT

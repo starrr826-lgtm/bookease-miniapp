@@ -7,20 +7,35 @@
     "pages/book/book"
   ],
   "window": {
-    "navigationBarTitleText": "约见",
+    "navigationBarTitleText": "满满日程",
     "navigationBarBackgroundColor": "#ffffff",
     "navigationBarTextStyle": "black",
     "backgroundColor": "#f4f5f7"
   },
   "tabBar": {
     "color": "#999999",
-    "selectedColor": "#07c160",
+    "selectedColor": "#E07B3C",
     "backgroundColor": "#ffffff",
     "borderStyle": "white",
     "list": [
-      { "pagePath": "pages/schedule/schedule", "text": "日程表" },
-      { "pagePath": "pages/bookings/bookings", "text": "预约" },
-      { "pagePath": "pages/my/my", "text": "我的" }
+      {
+        "pagePath": "pages/schedule/schedule",
+        "text": "日程表",
+        "iconPath": "assets/icons/schedule.png",
+        "selectedIconPath": "assets/icons/schedule-active.png"
+      },
+      {
+        "pagePath": "pages/bookings/bookings",
+        "text": "预约",
+        "iconPath": "assets/icons/booking.png",
+        "selectedIconPath": "assets/icons/booking-active.png"
+      },
+      {
+        "pagePath": "pages/my/my",
+        "text": "我的",
+        "iconPath": "assets/icons/my.png",
+        "selectedIconPath": "assets/icons/my-active.png"
+      }
     ]
   },
   "sitemapLocation": "sitemap.json",

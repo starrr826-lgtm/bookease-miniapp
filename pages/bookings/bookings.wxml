@@ -40,14 +40,14 @@
       <!-- 我收到的：显示 Guest 信息 -->
       <block wx:if="{{subTab === 'received'}}">
         <view class="text-small">
-          Guest：{{item.guestName || '（未填）'}} · {{item.guestPhone || ''}}
+          顾客：{{item.guestName || '（未填）'}} ； 联系方式：{{item.guestPhone || ''}}
         </view>
         <view wx:if="{{item.note}}" class="text-small text-muted" style="margin-top: 6rpx;">
           备注：{{item.note}}
         </view>
         <!-- 操作：pending 可确认/取消；confirmed 可取消 -->
         <view wx:if="{{item.status === 'pending'}}" class="row-between" style="margin-top: 16rpx;">
-          <view class="op-btn op-danger" data-id="{{item._id}}" bindtap="rejectBooking">取消</view>
+          <view class="op-btn op-danger" data-id="{{item._id}}" bindtap="rejectBooking">取消预约</view>
           <view class="op-btn op-primary" data-id="{{item._id}}" bindtap="confirmBooking">确认</view>
         </view>
         <view wx:elif="{{item.status === 'confirmed'}}" class="action-row" style="margin-top: 16rpx;">

@@ -22,7 +22,7 @@
         data-f="guestName"
         value="{{guestName}}"
         bindinput="onInput"
-        placeholder="方便 Owner 识别你的名字"
+        placeholder="请填写您的称呼"
         maxlength="20"
       />
     </view>
@@ -41,13 +41,13 @@
     </view>
 
     <view class="field">
-      <text class="field-label">备注</text>
+      <text class="field-label">备注（选填）</text>
       <textarea
         class="field-textarea"
         data-f="note"
         value="{{note}}"
         bindinput="onInput"
-        placeholder="有什么特别要告诉 Owner 的？（选填）"
+        placeholder="如有特殊要求或注意事项，请在此填写"
         maxlength="200"
         auto-height
       />
@@ -65,6 +65,6 @@
   </button>
 
   <view class="tips">
-    提交后 Owner 审核前，你可以在"预约 → 我发出的"里取消
+    提交后，您可在"预约 → 我发出的"里取消该预约申请。如店家已确认，则需联系店家取消。
   </view>
 </view>
