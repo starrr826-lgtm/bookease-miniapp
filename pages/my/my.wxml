@@ -37,22 +37,50 @@
       <view class="schedule-body" bindtap="openSchedule" data-id="{{item._id}}">
         <view class="schedule-name">{{item.name}}</view>
         <view class="schedule-meta">
-          分享码 <text class="key-text">{{item.qrCodeKey}}</text>
+          分享码
+          <view class="key-chip" catchtap="copyShareKey" data-key="{{item.qrCodeKey}}">
+            <text class="key-text">{{item.qrCodeKey}}</text>
+            <image class="key-copy-icon" src="/assets/icons/action-copy.svg" mode="aspectFit"/>
+          </view>
           · {{item.status === 0 ? '已停用' : '已启用'}}
         </view>
       </view>
       <view class="divider"></view>
       <!-- 操作行 -->
-      <view class="row-between">
-        <view class="action-copy text-small" catchtap="copyShareKey" data-key="{{item.qrCodeKey}}">复制分享码</view>
-        <view class="action-group">
-          <view class="action-edit text-small" catchtap="openSchedule" data-id="{{item._id}}">编辑</view>
-          <view class="action-divider"></view>
-          <view class="action-delete text-small" catchtap="deleteSchedule" data-id="{{item._id}}" data-name="{{item.name}}">删除</view>
+      <view class="action-row">
+        <view class="action-item" catchtap="showQRCode" data-id="{{item._id}}" data-key="{{item.qrCodeKey}}" data-name="{{item.name}}">
+          <image class="action-icon" src="/assets/icons/action-qr.svg" mode="aspectFit"/>
+          <text class="action-label">二维码</text>
+        </view>
+        <button class="action-item action-share-btn" open-type="share" data-key="{{item.qrCodeKey}}" data-name="{{item.name}}">
+          <image class="action-icon" src="/assets/icons/action-share.svg" mode="aspectFit"/>
+          <text class="action-label">分享链接</text>
+        </button>
+        <view class="action-item" catchtap="openSchedule" data-id="{{item._id}}">
+          <image class="action-icon" src="/assets/icons/action-edit.svg" mode="aspectFit"/>
+          <text class="action-label">编辑</text>
+        </view>
+        <view class="action-item" catchtap="deleteSchedule" data-id="{{item._id}}" data-name="{{item.name}}">
+          <image class="action-icon" src="/assets/icons/action-delete.svg" mode="aspectFit"/>
+          <text class="action-label">删除</text>
         </view>
       </view>
     </view>
   </block>
+
+  <!-- QR 弹窗 -->
+  <view wx:if="{{qrVisible}}" class="qr-overlay" catchtap="closeQR">
+    <view class="qr-card" catchtap="stopPropagation">
+      <view class="qr-schedule-name">{{qrScheduleName}}</view>
+      <view wx:if="{{qrLoading}}" class="qr-loading text-small text-muted">生成中…</view>
+      <image wx:elif="{{qrUrl}}" class="qr-image" src="{{qrUrl}}" mode="aspectFit"></image>
+      <view class="text-small text-muted" style="margin-top: 16rpx;">长按二维码可保存到相册</view>
+      <view class="qr-actions">
+        <view class="op-btn op-outline" catchtap="closeQR">关闭</view>
+        <button class="op-btn op-primary" open-type="share" data-key="{{qrScheduleKey}}" data-name="{{qrScheduleName}}">分享给朋友</button>
+      </view>
+    </view>
+  </view>
 
   <!-- 空态 -->
   <view wx:else class="empty">

@@ -16,11 +16,14 @@ function genKey() { return 'k' + (++rowKeyCounter) }
 
 Page({
   data: {
-    scheduleId: '',        // 如果从列表进来是编辑模式，有值
+    scheduleId: '',
     qrCodeKey: '',
     name: '',
-    items: [],             // [{key, name, durationMinutes}]
-    weeklySlots: [],       // [{dayOfWeek, name, slots:[{key, startTime, endTime}]}]
+    items: [],
+    weeklySlots: [],
+    qrVisible: false,
+    qrLoading: false,
+    qrUrl: '',
   },
 
   onLoad(options) {
@@ -148,6 +151,42 @@ Page({
     }
     if (!hasSlot) return '至少设置一个可预约时段'
     return null
+  },
+
+  showQRCode() {
+    const { scheduleId, qrUrl } = this.data
+    if (!scheduleId) return
+    this.setData({ qrVisible: true, qrLoading: !qrUrl })
+    if (qrUrl) return
+    util.callFn('getScheduleQRCode', { scheduleId }, { silent: true })
+      .then(res => {
+        if (res && res.success && res.url) {
+          this.setData({ qrLoading: false, qrUrl: res.url })
+        } else {
+          this.setData({ qrLoading: false })
+          wx.showToast({ title: '二维码生成失败', icon: 'none' })
+        }
+      })
+      .catch(() => {
+        this.setData({ qrLoading: false })
+        wx.showToast({ title: '二维码生成失败', icon: 'none' })
+      })
+  },
+
+  closeQR() {
+    this.setData({ qrVisible: false })
+  },
+
+  stopPropagation() {},
+
+  onShareAppMessage(options) {
+    const ds = (options && options.target && options.target.dataset) || {}
+    const key = ds.key || this.data.qrCodeKey
+    const name = ds.name || this.data.name || '营业日程'
+    return {
+      title: `查看「${name}」，在线预约`,
+      path: `/pages/schedule/schedule?key=${key}`,
+    }
   },
 
   onSave() {

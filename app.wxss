@@ -193,3 +193,58 @@ page {
   color: var(--color-danger);
   border: 2rpx solid var(--color-danger);
 }
+.op-outline {
+  color: var(--color-text-secondary);
+  border: 2rpx solid var(--color-border);
+}
+/* button 元素使用 op-btn 时重置微信默认样式 */
+button.op-btn {
+  line-height: normal;
+  margin: 0;
+  box-sizing: border-box;
+}
+button.op-btn::after { display: none; }
+
+/* ===== QR 弹窗（跨页共用）===== */
+.qr-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: flex-end;
+  z-index: 999;
+}
+.qr-card {
+  background: var(--color-card);
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  padding: var(--sp-5) var(--sp-4) var(--sp-6);
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.qr-schedule-name {
+  font-size: var(--fs-md);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: var(--sp-4);
+}
+.qr-image {
+  width: 360rpx;
+  height: 360rpx;
+}
+.qr-loading {
+  padding: 80rpx 0;
+}
+.qr-actions {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: var(--sp-4);
+  gap: var(--sp-3);
+}
+.qr-actions .op-btn {
+  flex: 1;
+  text-align: center;
+}

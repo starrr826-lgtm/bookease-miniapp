@@ -55,7 +55,25 @@ Page({
     inputKey: '',
   },
 
-  onLoad() {
+  onLoad(options) {
+    // 检测扫码 scene 或链接 key 参数，写入 pendingShareKey 让 onShow 处理
+    if (options) {
+      let autoKey = ''
+      if (options.scene) {
+        try {
+          const decoded = decodeURIComponent(options.scene)
+          const m = decoded.match(/key=([^&]+)/)
+          if (m) autoKey = m[1]
+        } catch (e) {}
+      } else if (options.key) {
+        autoKey = options.key
+      }
+      if (autoKey) {
+        const app = getApp()
+        if (app && app.globalData) app.globalData.pendingShareKey = autoKey
+      }
+    }
+
     const app = getApp()
     const def = (app.globalData && app.globalData.defaultScheduleSubTab) || 'mine'
     const now = new Date()

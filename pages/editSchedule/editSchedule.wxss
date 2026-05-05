@@ -99,13 +99,11 @@
 /* 问题3：× 图标按钮，去掉 margin-left:auto，尺寸收紧 */
 .mini-btn {
   flex-shrink: 0;
-  font-size: 36rpx;
-  padding: 0 4rpx;
-  line-height: 1;
 }
 
 .mini-btn.danger {
-  color: var(--color-danger);
+  width: 44rpx;
+  height: 44rpx;
 }
 
 .unit-label {
@@ -120,3 +118,23 @@
   color: var(--color-accent);
   padding: 10rpx 0;
 }
+
+/* ===== 分享卡 ===== */
+.share-card { margin-top: var(--sp-2); }
+.share-action-group {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+.action-qr { color: var(--color-primary); }
+.action-share {
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  border: none;
+  font-size: var(--fs-sm);
+  color: var(--color-accent);
+  line-height: normal;
+  font-weight: 400;
+}
+.action-share::after { display: none; }

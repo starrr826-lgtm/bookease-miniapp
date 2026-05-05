@@ -139,7 +139,7 @@
             <picker mode="time" value="{{slot.endTime}}" data-idx="{{sIdx}}" data-field="endTime" bindchange="onEditSlotTimeChange">
               <view class="time-picker-box">{{slot.endTime}}</view>
             </picker>
-            <view class="mini-btn-danger" bindtap="removeEditSlot" data-idx="{{sIdx}}">×</view>
+            <image class="mini-btn-danger" src="/assets/icons/action-remove.svg" mode="aspectFit" bindtap="removeEditSlot" data-idx="{{sIdx}}"/>
           </view>
           <view class="add-slot-row" bindtap="addEditSlot">+ 添加营业时段</view>
           <view class="edit-action-row">

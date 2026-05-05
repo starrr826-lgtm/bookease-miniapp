@@ -13,7 +13,7 @@
       <input class="input-inline flex2" placeholder="如：卸甲，延长款式" value="{{item.name}}" data-idx="{{index}}" bindinput="onInputItemName" />
       <input class="input-inline flex1" type="number" placeholder="如：60" value="{{item.durationMinutes}}" data-idx="{{index}}" bindinput="onInputItemDuration" />
       <text class="unit-label">分钟</text>
-      <view class="mini-btn danger" bindtap="removeItem" data-idx="{{index}}">×</view>
+      <image class="mini-btn danger" src="/assets/icons/action-remove.svg" mode="aspectFit" bindtap="removeItem" data-idx="{{index}}"/>
     </view>
     <view class="add-row" bindtap="addItem">+ 添加项目</view>
   </view>
@@ -31,7 +31,7 @@
         <picker mode="time" value="{{slot.endTime}}" data-dow="{{day.dayOfWeek}}" data-sidx="{{sIdx}}" data-field="endTime" bindchange="onTimeChange">
           <view class="time-picker">{{slot.endTime}}</view>
         </picker>
-        <view class="mini-btn danger" bindtap="removeSlot" data-dow="{{day.dayOfWeek}}" data-sidx="{{sIdx}}">×</view>
+        <image class="mini-btn danger" src="/assets/icons/action-remove.svg" mode="aspectFit" bindtap="removeSlot" data-dow="{{day.dayOfWeek}}" data-sidx="{{sIdx}}"/>
       </view>
       <view class="add-slot" bindtap="addSlot" data-dow="{{day.dayOfWeek}}">+ 添加时段</view>
     </view>
@@ -40,9 +40,26 @@
   <!-- 保存 -->
   <view class="btn-primary" bindtap="onSave">保存</view>
 
-  <view wx:if="{{scheduleId}}" style="margin-top: 16rpx;">
-    <view class="text-small text-muted" style="text-align: center; padding: 24rpx 0;">
-      分享码: {{qrCodeKey}}
+  <!-- 分享卡（编辑已有日程表时显示）-->
+  <view wx:if="{{scheduleId}}" class="card share-card">
+    <view class="row-between">
+      <view>
+        <view class="text-small text-muted">分享码 {{qrCodeKey}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- QR 弹窗 -->
+  <view wx:if="{{qrVisible}}" class="qr-overlay" catchtap="closeQR">
+    <view class="qr-card" catchtap="stopPropagation">
+      <view class="qr-schedule-name">{{name}}</view>
+      <view wx:if="{{qrLoading}}" class="qr-loading text-small text-muted">生成中…</view>
+      <image wx:elif="{{qrUrl}}" class="qr-image" src="{{qrUrl}}" mode="aspectFit"></image>
+      <view class="text-small text-muted" style="margin-top: 16rpx;">长按二维码可保存到相册</view>
+      <view class="qr-actions">
+        <view class="op-btn op-outline" catchtap="closeQR">关闭</view>
+        <button class="op-btn op-primary" open-type="share" data-key="{{qrCodeKey}}" data-name="{{name}}">分享给朋友</button>
+      </view>
     </view>
   </view>
 </view>

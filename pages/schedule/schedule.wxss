@@ -250,10 +250,8 @@
 }
 .time-sep       { font-size: var(--fs-sm); color: var(--color-text-secondary); flex-shrink: 0; }
 .mini-btn-danger {
-  color: var(--color-danger);
-  font-size: 36rpx;
-  padding: 0 4rpx;
-  line-height: 1;
+  width: 44rpx;
+  height: 44rpx;
   flex-shrink: 0;
 }
 .add-slot-row {
