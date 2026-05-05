@@ -3,6 +3,7 @@ const cloud = require('wx-server-sdk')
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 
 const db = cloud.database()
+const _ = db.command
 
 exports.main = async (event, context) => {
   const { OPENID } = cloud.getWXContext()
@@ -16,6 +17,14 @@ exports.main = async (event, context) => {
     const schedule = snap && snap.data
     if (!schedule) return { success: false, error: '日程表不存在' }
     if (schedule.ownerOpenid !== OPENID) return { success: false, error: '无权操作' }
+
+    // 将所有未终态预约标记为 cancelled
+    await db.collection('bookings').where({
+      scheduleId,
+      status: _.in(['pending', 'confirmed']),
+    }).update({
+      data: { status: 'cancelled', updatedAt: db.serverDate() },
+    }).catch(() => {})
 
     // 并行删除日程表及其 items / slots
     await Promise.all([

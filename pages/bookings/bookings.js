@@ -85,7 +85,7 @@ Page({
     const id = e.currentTarget.dataset.id
     wx.showModal({
       title: '取消此预约？',
-      content: '取消后 Guest 将看到状态变为已取消',
+      content: '是否取消预约？取消后请通知顾客。',
       success: (r) => {
         if (!r.confirm) return
         util.callFn('updateBookingStatus', { bookingId: id, status: 'cancelled' })

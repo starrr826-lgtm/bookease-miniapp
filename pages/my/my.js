@@ -127,7 +127,7 @@ Page({
     const { id, name } = e.currentTarget.dataset
     wx.showModal({
       title: '删除日程表',
-      content: '确定删除「' + name + '」？相关时段设置和顾客预约也将一并删除，此操作不可恢复。',
+      content: '确定删除「' + name + '」？相关顾客预约也将被一并取消，此操作不可恢复。',
       confirmText: '删除',
       confirmColor: '#e53935',
       success: (res) => {

@@ -320,7 +320,7 @@ Page({
     const bookingId = e.currentTarget.dataset.id
     wx.showModal({
       title: '取消预约',
-      content: '确认取消该预约？',
+      content: '该预约已确认，是否取消预约？取消后请通知顾客。',
       confirmText: '确认取消',
       confirmColor: '#e74c3c',
       success: (r) => {

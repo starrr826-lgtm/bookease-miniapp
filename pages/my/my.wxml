@@ -23,7 +23,7 @@
 
   <!-- 日程表区标题行 -->
   <view class="section-header">
-    <view class="section-label">我的日程表</view>
+    <view class="section-label">我的营业日程表</view>
     <view class="create-btn" bindtap="goCreate">＋ 新建</view>
   </view>
 
@@ -84,7 +84,7 @@
 
   <!-- 空态 -->
   <view wx:else class="empty">
-    <view>还没有日程表</view>
+    <view>还没有自己的营业日程表</view>
     <view class="text-small text-muted" style="margin-top:12rpx;">点击右上角「＋ 新建」创建第一个</view>
   </view>
 
