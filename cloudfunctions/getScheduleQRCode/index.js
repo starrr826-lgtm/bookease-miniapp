@@ -24,18 +24,35 @@ exports.main = async (event) => {
   }
 
   // 调微信 API 生成二维码
-  const qrRes = await cloud.openapi.wxacode.getUnlimited({
-    scene: `key=${schedule.qrCodeKey}`,
-    page: 'pages/schedule/schedule',
-    width: 280,
-    isHyaline: true,
-  })
+  let qrRes
+  try {
+    qrRes = await cloud.openapi.wxacode.getUnlimited({
+      scene: `key=${schedule.qrCodeKey}`,
+      page: 'pages/schedule/schedule',
+      width: 280,
+      isHyaline: true,
+    })
+  } catch (e) {
+    console.error('[getScheduleQRCode] wxacode.getUnlimited 失败', e)
+    return { success: false, error: 'wxacode.getUnlimited 调用失败: ' + (e && e.message || e) }
+  }
+
+  if (!qrRes || !qrRes.buffer) {
+    console.error('[getScheduleQRCode] getUnlimited 返回无效', qrRes)
+    return { success: false, error: 'getUnlimited 返回无 buffer，errCode=' + (qrRes && qrRes.errCode) }
+  }
 
   // 上传到云存储
-  const uploadRes = await cloud.uploadFile({
-    cloudPath: `qrcodes/${scheduleId}.png`,
-    fileContent: qrRes.buffer,
-  })
+  let uploadRes
+  try {
+    uploadRes = await cloud.uploadFile({
+      cloudPath: `qrcodes/${scheduleId}.png`,
+      fileContent: qrRes.buffer,
+    })
+  } catch (e) {
+    console.error('[getScheduleQRCode] uploadFile 失败', e)
+    return { success: false, error: 'uploadFile 失败: ' + (e && e.message || e) }
+  }
 
   // 写回 fileID 缓存
   await db.collection('schedules').doc(scheduleId).update({

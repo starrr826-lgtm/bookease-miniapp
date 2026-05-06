@@ -1,5 +1,6 @@
 // pages/book/book.js - Guest 提交预约
 const util = require('../../utils/util.js')
+const SUBSCRIBE_TMPL_ID = '6LgsGebD5UWIAnD1zdF0YZUlJ03imzGf4_qxNlOgSbY'
 
 Page({
   data: {
@@ -51,6 +52,16 @@ Page({
     }
 
     this.setData({ submitting: true })
+
+    // 必须在用户点击事件同步栈中调用，complete 后再提交
+    wx.requestSubscribeMessage({
+      tmplIds: [SUBSCRIBE_TMPL_ID],
+      complete: () => this._doSubmit(),
+    })
+  },
+
+  _doSubmit() {
+    const { scheduleId, itemId, bookingDate, startTime, endTime, guestName, guestPhone, note } = this.data
     util.callFn('createBooking', {
       scheduleId,
       itemId,

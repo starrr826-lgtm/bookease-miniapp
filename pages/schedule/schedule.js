@@ -320,7 +320,7 @@ Page({
     const bookingId = e.currentTarget.dataset.id
     wx.showModal({
       title: '取消预约',
-      content: '该预约已确认，是否取消预约？取消后请通知顾客。',
+      content: '该预约已被确认，是否取消预约？取消后请自行通知顾客。',
       confirmText: '确认取消',
       confirmColor: '#e74c3c',
       success: (r) => {
@@ -466,8 +466,7 @@ Page({
   unvisit(e) {
     const id = e.currentTarget.dataset.id
     wx.showModal({
-      title: '从列表中移除？',
-      content: '不会删除对方的日程表，只是从"他人的日程表"里隐藏',
+      title: '是否从列表中移除？',
       success: (r) => {
         if (!r.confirm) return
         util.callFn('unvisitSchedule', { scheduleId: id })

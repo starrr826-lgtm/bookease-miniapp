@@ -22,7 +22,7 @@ exports.main = async (event) => {
   const schedule = sres.data[0]
 
   const [itemsRes, slotsRes] = await Promise.all([
-    db.collection('service_items').where({ scheduleId: schedule._id }).get(),
+    db.collection('service_items').where({ scheduleId: schedule._id, isActive: true }).get(),
     db.collection('weekly_slots').where({ scheduleId: schedule._id }).get(),
   ])
 

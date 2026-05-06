@@ -5,8 +5,11 @@
 //   confirmed→ cancelled ：仅 Owner（Guest 无权取消已确认）
 //   cancelled→ *         ：终态，任何人不可再改
 const cloud = require('wx-server-sdk')
-cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
+cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV, traceUser: true })
 const db = cloud.database()
+
+const SUBSCRIBE_TMPL_ID = '6LgsGebD5UWIAnD1zdF0YZUlJ03imzGf4_qxNlOgSbY'
+const STATUS_TEXT = { confirmed: '已确认', cancelled: '已取消' }
 
 exports.main = async (event) => {
   const { OPENID } = cloud.getWXContext()
@@ -49,6 +52,25 @@ exports.main = async (event) => {
   await db.collection('bookings').doc(bookingId).update({
     data: { status, updatedAt: db.serverDate() },
   })
+
+  // 发送订阅消息给 Guest（失败不影响主流程）
+  try {
+    if (booking.guestOpenid) {
+      await cloud.openapi.subscribeMessage.send({
+        touser: booking.guestOpenid,
+        templateId: SUBSCRIBE_TMPL_ID,
+        page: 'pages/bookings/bookings',
+        data: {
+          name1: { value: booking.scheduleName || '日程提醒' },
+          thing7: { value: booking.itemName || '无' },
+          date8: { value: booking.bookingDate },
+          thing9: { value: `您的预约${STATUS_TEXT[status] || status}` },
+        },
+      })
+    }
+  } catch (e) {
+    console.warn('[updateBookingStatus] 订阅消息发送失败', e)
+  }
 
   return { success: true }
 }

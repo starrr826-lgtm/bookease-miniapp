@@ -10,7 +10,7 @@ exports.main = async (event) => {
   const scheduleId = event && event.scheduleId
   if (!scheduleId) return { success: false, error: '参数缺失' }
 
-  await db.collection('users').where({ _openid: OPENID }).update({
+  await db.collection('users').where({ openid: OPENID }).update({
     data: {
       visitedSchedules: _.pull(scheduleId),
       updatedAt: db.serverDate(),
