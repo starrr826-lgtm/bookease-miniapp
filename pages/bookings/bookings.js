@@ -102,8 +102,7 @@ Page({
   cancelMyBooking(e) {
     const id = e.currentTarget.dataset.id
     wx.showModal({
-      title: '取消预约？',
-      content: '只能取消尚未被 Owner 确认的预约',
+      title: '是否取消预约？',
       success: (r) => {
         if (!r.confirm) return
         util.callFn('updateBookingStatus', { bookingId: id, status: 'cancelled' })
