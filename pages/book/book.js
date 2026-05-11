@@ -6,9 +6,9 @@ Page({
   data: {
     scheduleId: '',
     scheduleName: '',
-    itemId: '',
-    itemName: '',
-    itemDurationMinutes: 0,
+    itemIds: [],
+    itemsDisplay: [],             // [{name}] 用于展示
+    totalDurationMinutes: 0,
     bookingDate: '',
     startTime: '',
     endTime: '',
@@ -19,12 +19,16 @@ Page({
   },
 
   onLoad(options) {
+    const itemIds = decodeURIComponent(options.itemIds || '').split(',').filter(Boolean)
+    const itemNames = decodeURIComponent(options.itemNames || '').split(',').filter(Boolean)
+    const totalDurationMinutes = Number(options.totalDurationMinutes) || 0
+    const itemsDisplay = itemIds.map((id, i) => ({ id, name: itemNames[i] || '' }))
     this.setData({
       scheduleId: options.scheduleId || '',
       scheduleName: decodeURIComponent(options.scheduleName || ''),
-      itemId: options.itemId || '',
-      itemName: decodeURIComponent(options.itemName || ''),
-      itemDurationMinutes: Number(options.itemDurationMinutes) || 0,
+      itemIds,
+      itemsDisplay,
+      totalDurationMinutes,
       bookingDate: options.bookingDate || '',
       startTime: options.startTime || '',
       endTime: options.endTime || '',
@@ -41,7 +45,7 @@ Page({
   },
 
   submit() {
-    const { scheduleId, itemId, bookingDate, startTime, endTime, guestName, guestPhone, note } = this.data
+    const { scheduleId, itemIds, bookingDate, startTime, endTime, guestName, guestPhone, note } = this.data
     if (!guestName || !guestName.trim()) {
       wx.showToast({ title: '请填写称呼', icon: 'none' })
       return
@@ -61,10 +65,10 @@ Page({
   },
 
   _doSubmit() {
-    const { scheduleId, itemId, bookingDate, startTime, endTime, guestName, guestPhone, note } = this.data
+    const { scheduleId, itemIds, bookingDate, startTime, endTime, guestName, guestPhone, note } = this.data
     util.callFn('createBooking', {
       scheduleId,
-      itemId,
+      itemIds,
       bookingDate,
       startTime,
       endTime,

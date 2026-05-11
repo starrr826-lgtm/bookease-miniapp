@@ -47,7 +47,9 @@ Page({
     detailSchedule: null,
     detailItems: [],
     detailSlots: [],
-    selectedItemId: '',
+    selectedItemIds: [],          // 已选服务项 ID 数组
+    selectedItemIdsMap: {},       // { id: true } 供 wxml 快速查找
+    totalDurationMinutes: 0,      // 已选项目合计时长
     detailDotsByDate: {},
     detailSlotsForDate: [],
 
@@ -415,7 +417,7 @@ Page({
       content: '将该日期恢复为周循环时段？',
       success: (r) => {
         if (!r.confirm) return
-        util.callFn('setDayOverride', { scheduleId: ownerScheduleId, date: selectedDate, slots: [] })
+        util.callFn('setDayOverride', { scheduleId: ownerScheduleId, date: selectedDate, slots: null })
           .then(() => {
             wx.showToast({ title: '已恢复', icon: 'success' })
             this.setData({ editingDaySlots: null })
@@ -488,12 +490,18 @@ Page({
         }
         const items = data.items || []
         const slots = data.slots || []
+        const firstId = (items[0] && items[0]._id) || ''
+        const selectedItemIds = firstId ? [firstId] : []
+        const selectedItemIdsMap = firstId ? { [firstId]: true } : {}
+        const totalDurationMinutes = (items[0] && items[0].durationMinutes) || 0
         this.setData({
           othersState: 'detail',
           detailSchedule: schedule,
           detailItems: items,
           detailSlots: slots,
-          selectedItemId: (items[0] && items[0]._id) || '',
+          selectedItemIds,
+          selectedItemIdsMap,
+          totalDurationMinutes,
           loading: false,
         }, () => {
           this.rebuildDetailDots()
@@ -509,7 +517,9 @@ Page({
       detailSchedule: null,
       detailItems: [],
       detailSlots: [],
-      selectedItemId: '',
+      selectedItemIds: [],
+      selectedItemIdsMap: {},
+      totalDurationMinutes: 0,
       detailDotsByDate: {},
       detailSlotsForDate: [],
     }, () => {
@@ -519,17 +529,30 @@ Page({
   },
 
   selectItem(e) {
-    this.setData({ selectedItemId: e.currentTarget.dataset.id }, () => {
+    const id = e.currentTarget.dataset.id
+    const { selectedItemIds, detailItems } = this.data
+    const newIds = selectedItemIds.includes(id)
+      ? selectedItemIds.filter(i => i !== id)
+      : [...selectedItemIds, id]
+    const newMap = {}
+    newIds.forEach(i => { newMap[i] = true })
+    const total = detailItems
+      .filter(i => newMap[i._id])
+      .reduce((sum, i) => sum + (i.durationMinutes || 0), 0)
+    this.setData({
+      selectedItemIds: newIds,
+      selectedItemIdsMap: newMap,
+      totalDurationMinutes: total,
+    }, () => {
       this.rebuildDetailDots()
       this.rebuildDetailSlotsForDate()
     })
   },
 
   rebuildDetailDots() {
-    const { detailSlots, detailItems, selectedItemId, monthGrid } = this.data
-    const item = (detailItems || []).find(i => i._id === selectedItemId)
+    const { detailSlots, totalDurationMinutes, monthGrid } = this.data
     const dots = {}
-    if (!item) {
+    if (!totalDurationMinutes) {
       this.setData({ detailDotsByDate: dots }, () => this.rebuildMonthGrid())
       return
     }
@@ -539,16 +562,15 @@ Page({
       const d = new Date(cell.date + 'T00:00:00')
       const storedDow = jsToStoredDow(d.getDay())
       const daySlots = (detailSlots || []).filter(s => s.dayOfWeek === storedDow && s.isActive !== false)
-      const ok = daySlots.some(s => (util.toMin(s.endTime) - util.toMin(s.startTime)) >= item.durationMinutes)
+      const ok = daySlots.some(s => (util.toMin(s.endTime) - util.toMin(s.startTime)) >= totalDurationMinutes)
       if (ok) dots[cell.date] = true
     })
     this.setData({ detailDotsByDate: dots }, () => this.rebuildMonthGrid())
   },
 
   rebuildDetailSlotsForDate() {
-    const { detailSlots, detailItems, selectedItemId, selectedDate } = this.data
-    const item = (detailItems || []).find(i => i._id === selectedItemId)
-    if (!item || !selectedDate) {
+    const { detailSlots, totalDurationMinutes, selectedDate } = this.data
+    if (!totalDurationMinutes || !selectedDate) {
       this.setData({ detailSlotsForDate: [] })
       return
     }
@@ -563,11 +585,11 @@ Page({
     daySlots.forEach(slot => {
       let cursor = util.toMin(slot.startTime)
       const end = util.toMin(slot.endTime)
-      while (cursor + item.durationMinutes <= end) {
+      while (cursor + totalDurationMinutes <= end) {
         const st = util.minToTime(cursor)
-        const et = util.minToTime(cursor + item.durationMinutes)
+        const et = util.minToTime(cursor + totalDurationMinutes)
         options.push({ startTime: st, endTime: et, label: st + '-' + et })
-        cursor += item.durationMinutes
+        cursor += totalDurationMinutes
       }
     })
     this.setData({ detailSlotsForDate: options })
@@ -575,15 +597,19 @@ Page({
 
   pickTime(e) {
     const { start, end } = e.currentTarget.dataset
-    const { detailSchedule, detailItems, selectedItemId, selectedDate } = this.data
-    const item = (detailItems || []).find(i => i._id === selectedItemId)
-    if (!item || !detailSchedule) return
+    const { detailSchedule, detailItems, selectedItemIds, totalDurationMinutes, selectedDate } = this.data
+    if (!detailSchedule) return
+    if (!selectedItemIds.length) {
+      wx.showToast({ title: '请先选择服务项', icon: 'none' })
+      return
+    }
+    const selectedItems = detailItems.filter(i => selectedItemIds.includes(i._id))
     const q =
       '?scheduleId=' + detailSchedule._id +
       '&scheduleName=' + encodeURIComponent(detailSchedule.name || '') +
-      '&itemId=' + item._id +
-      '&itemName=' + encodeURIComponent(item.name || '') +
-      '&itemDurationMinutes=' + item.durationMinutes +
+      '&itemIds=' + encodeURIComponent(selectedItemIds.join(',')) +
+      '&itemNames=' + encodeURIComponent(selectedItems.map(i => i.name).join(',')) +
+      '&totalDurationMinutes=' + totalDurationMinutes +
       '&bookingDate=' + selectedDate +
       '&startTime=' + start +
       '&endTime=' + end

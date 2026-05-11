@@ -5,7 +5,10 @@
     <view class="summary-title">{{scheduleName}}</view>
     <view class="summary-line">
       <text class="label">服务项</text>
-      <text class="value">{{itemName}} · {{itemDurationMinutes}}分钟</text>
+      <view class="value">
+        <view wx:for="{{itemsDisplay}}" wx:key="id" class="item-name-line">{{item.name}}</view>
+        <view class="item-total">合计 {{totalDurationMinutes}} 分钟</view>
+      </view>
     </view>
     <view class="summary-line">
       <text class="label">时间</text>

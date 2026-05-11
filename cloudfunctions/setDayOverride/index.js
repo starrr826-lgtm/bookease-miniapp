@@ -1,7 +1,8 @@
 // cloudfunctions/setDayOverride/index.js
 // 为某一具体日期设置或删除时段覆盖（覆盖周循环默认值）
-// event: { scheduleId, date: 'YYYY-MM-DD', slots: [{startTime, endTime}] }
-//   slots 为空数组 [] 表示删除覆盖（恢复周循环默认）
+// event: { scheduleId, date: 'YYYY-MM-DD', slots: [{startTime, endTime}] | null }
+//   slots 为 null 表示删除覆盖（恢复周循环默认）
+//   slots 为 [] 表示该日明确关闭（无营业时间）
 // 返回: { success: true }
 const cloud = require('wx-server-sdk')
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
@@ -23,8 +24,8 @@ exports.main = async (event) => {
     .limit(1)
     .get()
 
-  if (!slots || slots.length === 0) {
-    // 空 slots = 删除覆盖，恢复周循环默认
+  if (slots === null || slots === undefined) {
+    // null = 删除覆盖，恢复周循环默认
     if (existing.data && existing.data.length > 0) {
       await db.collection('day_overrides').doc(existing.data[0]._id).remove()
     }

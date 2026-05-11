@@ -26,6 +26,17 @@
   flex: 1;
   font-weight: 500;
 }
+.item-name-line {
+  font-size: var(--fs-base);
+  font-weight: 500;
+  color: var(--color-text-primary);
+  line-height: 1.9;
+}
+.item-total {
+  font-size: var(--fs-sm);
+  color: var(--color-text-secondary);
+  margin-top: 2rpx;
+}
 
 /* ===== 表单卡 ===== */
 .form-card {

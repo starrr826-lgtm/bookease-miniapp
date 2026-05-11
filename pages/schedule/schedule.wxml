@@ -70,20 +70,25 @@
         <view class="detail-title">{{detailSchedule.name}}</view>
         <view class="text-small text-muted" wx:if="{{detailSchedule.description}}">{{detailSchedule.description}}</view>
       </view>
-      <view class="section-title">选择服务项</view>
+      <view class="section-title">选择服务项（可多选）</view>
       <block wx:if="{{detailItems.length > 0}}">
         <view class="chip-row">
           <view
             wx:for="{{detailItems}}"
             wx:key="_id"
-            class="chip {{selectedItemId === item._id ? 'active' : ''}}"
+            class="chip {{selectedItemIdsMap[item._id] ? 'active' : ''}}"
             data-id="{{item._id}}"
             bindtap="selectItem"
           >
+            <view wx:if="{{selectedItemIdsMap[item._id]}}" class="chip-check">✓</view>
             <view class="chip-main">{{item.name}}</view>
             <view class="chip-sub">{{item.durationMinutes}}分钟</view>
           </view>
         </view>
+        <view wx:if="{{totalDurationMinutes > 0}}" class="chip-total">
+          已选 {{selectedItemIds.length}} 项 · 合计 {{totalDurationMinutes}} 分钟
+        </view>
+        <view wx:else class="chip-hint">请选择至少一个服务项</view>
       </block>
       <view wx:else class="empty-inline text-small text-muted">暂无可选服务项</view>
     </block>
