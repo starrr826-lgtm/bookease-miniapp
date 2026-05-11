@@ -42,12 +42,13 @@ exports.main = async (event) => {
     if (items.some(i => !i)) return err('服务项不存在')
     if (items.some(i => i.scheduleId && i.scheduleId !== scheduleId)) return err('服务项与日程表不匹配')
 
-    // 冲突检查：同一 schedule + 同一天 + 同一 startTime 若已有 pending/confirmed 预约，拦截
+    // 冲突检查：同一 schedule + 同一天，只要与已有 pending/confirmed 预约时间重叠即拦截
     const conflictRes = await db.collection('bookings').where({
       scheduleId,
       bookingDate,
-      startTime,
       status: _.in(['pending', 'confirmed']),
+      startTime: _.lt(endTime),
+      endTime: _.gt(startTime),
     }).count()
     if (conflictRes.total > 0) return err('该时段已被预约')
 

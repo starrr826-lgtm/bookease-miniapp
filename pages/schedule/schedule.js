@@ -8,6 +8,8 @@ function todayStr() { return util.toDateStr(new Date()) }
 let slotKeyCounter = 0
 function genSlotKey() { return 'sk' + (++slotKeyCounter) }
 
+const SLOT_STEP_MIN = 30  // 可约时段起点步长（分钟），暂不对外开放配置
+
 // JS getDay() (0=Sun,1=Mon…6=Sat) → 存储的 dayOfWeek (1=Mon…7=Sun)
 function jsToStoredDow(jsDay) { return jsDay === 0 ? 7 : jsDay }
 
@@ -52,6 +54,7 @@ Page({
     totalDurationMinutes: 0,      // 已选项目合计时长
     detailDotsByDate: {},
     detailSlotsForDate: [],
+    bookedSlotsForDate: [],
 
     loading: true,
     inputKey: '',
@@ -124,7 +127,7 @@ Page({
     if (subTab === 'mine') return this.loadOwnerData()
     if (othersState === 'list') return this.loadVisited()
     if (othersState === 'detail' && this.data.detailSchedule) {
-      return this.openScheduleByKey(this.data.detailSchedule.qrCodeKey)
+      return this.loadBookedSlotsForDate(this.data.selectedDate)
     }
     return Promise.resolve()
   },
@@ -208,7 +211,7 @@ Page({
         this.refreshOwnerSelected()
         this.refreshDaySlots()
       } else if (this.data.othersState === 'detail') {
-        this.rebuildDetailSlotsForDate()
+        this.loadBookedSlotsForDate(date)
       }
     })
   },
@@ -502,10 +505,11 @@ Page({
           selectedItemIds,
           selectedItemIdsMap,
           totalDurationMinutes,
+          bookedSlotsForDate: [],
           loading: false,
         }, () => {
           this.rebuildDetailDots()
-          this.rebuildDetailSlotsForDate()
+          this.loadBookedSlotsForDate(this.data.selectedDate)
         })
       })
       .catch(() => {})
@@ -568,8 +572,23 @@ Page({
     this.setData({ detailDotsByDate: dots }, () => this.rebuildMonthGrid())
   },
 
+  loadBookedSlotsForDate(date) {
+    const scheduleId = this.data.detailSchedule && this.data.detailSchedule._id
+    if (!scheduleId || !date) {
+      this.setData({ bookedSlotsForDate: [] }, () => this.rebuildDetailSlotsForDate())
+      return
+    }
+    util.callFn('getBookedSlots', { scheduleId, bookingDate: date }, { silent: true })
+      .then(res => {
+        this.setData({ bookedSlotsForDate: Array.isArray(res) ? res : [] }, () => this.rebuildDetailSlotsForDate())
+      })
+      .catch(() => {
+        this.setData({ bookedSlotsForDate: [] }, () => this.rebuildDetailSlotsForDate())
+      })
+  },
+
   rebuildDetailSlotsForDate() {
-    const { detailSlots, totalDurationMinutes, selectedDate } = this.data
+    const { detailSlots, totalDurationMinutes, selectedDate, bookedSlotsForDate } = this.data
     if (!totalDurationMinutes || !selectedDate) {
       this.setData({ detailSlotsForDate: [] })
       return
@@ -588,8 +607,11 @@ Page({
       while (cursor + totalDurationMinutes <= end) {
         const st = util.minToTime(cursor)
         const et = util.minToTime(cursor + totalDurationMinutes)
-        options.push({ startTime: st, endTime: et, label: st + '-' + et })
-        cursor += totalDurationMinutes
+        const isBooked = (bookedSlotsForDate || []).some(
+          b => b.startTime < et && b.endTime > st
+        )
+        if (!isBooked) options.push({ startTime: st, endTime: et, label: st + '-' + et })
+        cursor += SLOT_STEP_MIN
       }
     })
     this.setData({ detailSlotsForDate: options })
@@ -603,16 +625,32 @@ Page({
       wx.showToast({ title: '请先选择服务项', icon: 'none' })
       return
     }
-    const selectedItems = detailItems.filter(i => selectedItemIds.includes(i._id))
-    const q =
-      '?scheduleId=' + detailSchedule._id +
-      '&scheduleName=' + encodeURIComponent(detailSchedule.name || '') +
-      '&itemIds=' + encodeURIComponent(selectedItemIds.join(',')) +
-      '&itemNames=' + encodeURIComponent(selectedItems.map(i => i.name).join(',')) +
-      '&totalDurationMinutes=' + totalDurationMinutes +
-      '&bookingDate=' + selectedDate +
-      '&startTime=' + start +
-      '&endTime=' + end
-    wx.navigateTo({ url: '/pages/book/book' + q })
+
+    const doNavigate = () => {
+      const selectedItems = detailItems.filter(i => selectedItemIds.includes(i._id))
+      const q =
+        '?scheduleId=' + detailSchedule._id +
+        '&scheduleName=' + encodeURIComponent(detailSchedule.name || '') +
+        '&itemIds=' + encodeURIComponent(selectedItemIds.join(',')) +
+        '&itemNames=' + encodeURIComponent(selectedItems.map(i => i.name).join(',')) +
+        '&totalDurationMinutes=' + totalDurationMinutes +
+        '&bookingDate=' + selectedDate +
+        '&startTime=' + start +
+        '&endTime=' + end
+      wx.navigateTo({ url: '/pages/book/book' + q })
+    }
+
+    util.callFn('getBookedSlots', { scheduleId: detailSchedule._id, bookingDate: selectedDate }, { silent: true })
+      .then(res => {
+        const booked = Array.isArray(res) ? res : []
+        const conflict = booked.some(b => b.startTime < end && b.endTime > start)
+        if (conflict) {
+          wx.showToast({ title: '该时段刚被预约，已为您刷新', icon: 'none' })
+          this.setData({ bookedSlotsForDate: booked }, () => this.rebuildDetailSlotsForDate())
+          return
+        }
+        doNavigate()
+      })
+      .catch(() => doNavigate())
   },
 })

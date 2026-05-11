@@ -3,7 +3,8 @@
     "allow": [
       "Bash(mkdir -p /Users/starryliu/Desktop/booking-miniapp/cloudfunctions/getMyScheduleSlots)",
       "Bash(mkdir -p /Users/starryliu/Desktop/booking-miniapp/cloudfunctions/setDayOverride)",
-      "Bash(python3 *)"
+      "Bash(python3 *)",
+      "Bash(grep -v \"^.*//.*$\")"
     ]
   }
 }
